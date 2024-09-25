@@ -24,3 +24,5 @@ Imports:
     rlang,
     sf,
     stringr
+URL: https://github.com/thomas-kvalnes/rgts
+BugReports: https://github.com/thomas-kvalnes/rgts/issues

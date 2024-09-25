@@ -1,0 +1,96 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# rgts
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+## Overview
+
+The goal of rgts is to provide convenient methods for accessing and downloading the GridTimeSeries (GTS) data for Norway (api.nve.no/doc/gridtimeseries-data-gts/) from the Norwegian Water Resources and Energy Directorate (NVE). This data reposiory contains 1x1 km gridded time series data for Norway and includes several weather and environmental parameters, such as temperature, precipitation, wind direction and strength and snow depth. Data is available at 1h, 3h and daily intervals depending on the variable of interest. Many of the daily variables go back from present to 1957.
+
+## Installation
+
+You can install the development version of rgts from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("thomas-kvalnes/rgts")
+```
+
+## Features
+
+```{r load rgts}
+library(rgts)
+gts_parameters()
+```
+
+The variables available in the GridTimeSeries (GTS) data can be listed using gts_parameters(). Here we show the first five:
+
+```{r parameters}
+head(gts_parameters(), 5)
+```
+
+If we have some points of interest we can download data for the points in grid cells using:
+
+```{r points}
+## Create a data frame with coordinates
+coords <- data.frame(x = c(58200, 74225), y = c(6708225, 6715025))
+## Download data
+gts_dl_coords(coords = coords, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-02")
+
+```
+
+Lets create a polygon, which we imagine covers an area of interest at Hardangervidda in Norway.
+
+```{r poly}
+## Create a sf polygon
+library(sf)
+xx <- c(58200, 74225, 58200, 74226)
+yy <- c(6708225, 6708225, 6715025, 6715025)
+pol <- st_as_sf(x = data.frame(x = xx, y = yy), coords = c("x", "y"), crs = 25833)
+pol <- st_as_sf(st_as_sfc(st_bbox(pol)))
+```
+
+We can now take this polygon and download daily temperature data ("tm") for all grid cells within the polygon. First we need to convert the polygon to json using the function sf_to_json().
+
+```{r download poly}
+## Convert to json
+pol <- sf_to_json(pol)
+## Download data
+gts_dl_polygon(polygon = pol, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01")
+```
+
+Each 1x1 km grid cell have a unique ID, called cellindex. It is faster to query the API using cellindices directly instead of going the way around with polygons. The cellindices for a given polygon can be obtained by
+
+```{r cellindex}
+cells <- gts_cellindex(polygon = pol)
+cells
+```
+
+Then the daily temperature data can be obtained by:
+
+```{r download cellindex}
+## Download data
+gts_dl_cellindex(cellindex = cells, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01")
+```
+
+We can also obtain data aggregated across grid cells. We then need to choose a method for aggregating data, "sum", "min", "max", "avg" or "median". Choosing "avg" we can obtain daily averages by:
+
+```{r download cellindex aggr}
+## Download data
+gts_dl_cellindex_aggr(cellindex = cells, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-10", method = "avg")
+```
