@@ -35,7 +35,6 @@ devtools::install_github("thomas-kvalnes/rgts")
 
 ```{r load rgts}
 library(rgts)
-gts_parameters()
 ```
 
 The variables available in the GridTimeSeries (GTS) data can be listed using gts_parameters(). Here we show the first five:
