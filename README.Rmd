@@ -84,7 +84,7 @@ Then the daily temperature data can be obtained. Again we only show the first 10
 
 ```{r download cellindex}
 ## Download data
-gts_dl_cellindex(cellindex = cells, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01")
+head(gts_dl_cellindex(cellindex = cells, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01"), 10)
 ```
 
 We can also obtain data aggregated across grid cells. We then need to choose a method for aggregating data, "sum", "min", "max", "avg" or "median". Choosing "avg" we can obtain daily averages by:
