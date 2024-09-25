@@ -64,13 +64,13 @@ pol <- st_as_sf(x = data.frame(x = xx, y = yy), coords = c("x", "y"), crs = 2583
 pol <- st_as_sf(st_as_sfc(st_bbox(pol)))
 ```
 
-We can now take this polygon and download daily temperature data ("tm") for all grid cells within the polygon. First we need to convert the polygon to json using the function sf_to_json().
+We can now take this polygon and download daily temperature data ("tm") for all grid cells within the polygon. First we need to convert the polygon to json using the function sf_to_json(). We only show the first 10 lines of data.
 
 ```{r download poly}
 ## Convert to json
 pol <- sf_to_json(pol)
 ## Download data
-gts_dl_polygon(polygon = pol, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01")
+head(gts_dl_polygon(polygon = pol, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01"), 10)
 ```
 
 Each 1x1 km grid cell have a unique ID, called cellindex. It is faster to query the API using cellindices directly instead of going the way around with polygons. The cellindices for a given polygon can be obtained by
@@ -80,7 +80,7 @@ cells <- gts_cellindex(polygon = pol)
 cells
 ```
 
-Then the daily temperature data can be obtained by:
+Then the daily temperature data can be obtained. Again we only show the first 10 lines of data.
 
 ```{r download cellindex}
 ## Download data
