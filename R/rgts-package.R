@@ -28,5 +28,6 @@
 #' @importFrom stringr str_remove_all
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_split
+#' @importFrom stringr str_split_fixed
 ## usethis namespace: end
 NULL
