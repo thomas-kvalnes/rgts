@@ -93,7 +93,7 @@ polygon to json using the function sf_to_json(). We only show the first
 
 ``` r
 ## Convert to json
-pol <- gts_sf_to_json(pol)
+pol <- gts_sf2json(pol)
 ## Download data
 head(gts_dl_polygon(polygon = pol, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01"), 10)
 #>    cellindex altitude       date  time time_resolution_minutes    unit    tm

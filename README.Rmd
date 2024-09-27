@@ -68,7 +68,7 @@ We can now take this polygon and download daily temperature data ("tm") for all 
 
 ```{r download poly}
 ## Convert to json
-pol <- gts_sf_to_json(pol)
+pol <- gts_sf2json(pol)
 ## Download data
 head(gts_dl_polygon(polygon = pol, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01"), 10)
 ```

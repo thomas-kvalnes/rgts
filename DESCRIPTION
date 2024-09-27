@@ -1,7 +1,7 @@
 Package: rgts
 Type: Package
 Title: Conveniently download gridded time series data for Norway from NVE
-Version: 1.0.0
+Version: 0.9.0
 Authors@R: person("Thomas", "Kvalnes", email = "thomas.kvalnes@nina.no",
   role = c("aut", "cre"))
 Description: A set of functions for accessing and downloading the GridTimeSeries (GTS) data (api.nve.no/doc/gridtimeseries-data-gts/) from the Norwegian Water Resources and Energy Directorate (NVE). This data reposiory contains 1x1 km gridded time series data for Norway and includes several weather and environmental parameters, such as temperature, precipitation, wind direction and strength and snow depth.
