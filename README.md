@@ -82,8 +82,8 @@ library(sf)
 #> Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 xx <- c(58200, 74225, 58200, 74226)
 yy <- c(6708225, 6708225, 6715025, 6715025)
-pol <- st_as_sf(x = data.frame(x = xx, y = yy), coords = c("x", "y"), crs = 25833)
-pol <- st_as_sf(st_as_sfc(st_bbox(pol)))
+points <- st_as_sf(x = data.frame(x = xx, y = yy), coords = c("x", "y"), crs = 25833)
+pol <- st_as_sf(st_as_sfc(st_bbox(points)))
 ```
 
 We can now take this polygon and download daily temperature data (“tm”)
@@ -93,9 +93,9 @@ polygon to json using the function sf_to_json(). We only show the first
 
 ``` r
 ## Convert to json
-pol <- gts_sf2json(pol)
+pol_json <- gts_sf2json(pol)
 ## Download data
-head(gts_dl_polygon(polygon = pol, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01"), 10)
+head(gts_dl_polygon(polygon = pol_json, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01"), 10)
 #>    cellindex altitude       date  time time_resolution_minutes    unit    tm
 #> 1    1535708     1245 2023-12-01 00:00                    1440 Celcius -12.9
 #> 2    1535709     1314 2023-12-01 00:00                    1440 Celcius -13.5
@@ -115,7 +115,7 @@ around with polygons. The cellindices for a given polygon can be
 obtained by
 
 ``` r
-cells <- gts_cellindex(polygon = pol)
+cells <- gts_cellindex(geometry = pol)
 cells
 #>   [1] 1535708 1535709 1535710 1535711 1535712 1535713 1535714 1535715 1535716
 #>  [10] 1535717 1535718 1535719 1535720 1535721 1535722 1535723 1536903 1536904

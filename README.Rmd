@@ -60,23 +60,23 @@ Lets create a polygon, which we imagine covers an area of interest at Hardangerv
 library(sf)
 xx <- c(58200, 74225, 58200, 74226)
 yy <- c(6708225, 6708225, 6715025, 6715025)
-pol <- st_as_sf(x = data.frame(x = xx, y = yy), coords = c("x", "y"), crs = 25833)
-pol <- st_as_sf(st_as_sfc(st_bbox(pol)))
+points <- st_as_sf(x = data.frame(x = xx, y = yy), coords = c("x", "y"), crs = 25833)
+pol <- st_as_sf(st_as_sfc(st_bbox(points)))
 ```
 
 We can now take this polygon and download daily temperature data ("tm") for all grid cells within the polygon. First we need to convert the polygon to json using the function sf_to_json(). We only show the first 10 lines of data.
 
 ```{r download poly}
 ## Convert to json
-pol <- gts_sf2json(pol)
+pol_json <- gts_sf2json(pol)
 ## Download data
-head(gts_dl_polygon(polygon = pol, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01"), 10)
+head(gts_dl_polygon(polygon = pol_json, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01"), 10)
 ```
 
 Each 1x1 km grid cell have a unique ID, called cellindex. It is faster to query the API using cellindices directly instead of going the way around with polygons. The cellindices for a given polygon can be obtained by
 
 ```{r cellindex}
-cells <- gts_cellindex(polygon = pol)
+cells <- gts_cellindex(geometry = pol)
 cells
 ```
 

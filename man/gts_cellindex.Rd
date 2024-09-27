@@ -4,25 +4,26 @@
 \alias{gts_cellindex}
 \title{List CellIndices in the GridTimeSeries data for a polygon}
 \usage{
-gts_cellindex(polygon)
+gts_cellindex(geometry)
 }
 \arguments{
-\item{polygon}{A polygon as json rings with spatialReference. Use sf_to_json() to convert from sf til json. Should be in coordinate system EPSG:25833.}
+\item{geometry}{A sf polygon or sf points. Should be in coordinate system EPSG:25833.}
 }
 \value{
-A vector with the CellIndices for the grid cells in the polygon from the GridTimeSeries data.
+A vector with the CellIndices for the grid cells in the GridTimeSeries data which intersects with the geometry.
 }
 \description{
-Looks up the CellIndex for each grid cell in the GridTimeSeries data which is within a given polygon.
+Looks up the CellIndex for each grid cell in the GridTimeSeries data which intersects with a polygon or a set of points.
 }
 \examples{
-## Create a sf polygon and convert to json
+## Create sf points and a sf polygon
 library(sf)
 xx <- c(58200, 74225, 58200, 74226)
 yy <- c(6708225, 6708225, 6715025, 6715025)
-pol <- st_as_sf(x = data.frame(x = xx, y = yy), coords = c("x", "y"), crs = 25833)
-pol <- st_as_sf(st_as_sfc(st_bbox(pol)))
-pol <- gts_sf2json(pol)
-## Extract cellindices
-gts_cellindex(polygon = pol)
+points <- st_as_sf(x = data.frame(x = xx, y = yy), coords = c("x", "y"), crs = 25833)
+pol <- st_as_sf(st_as_sfc(st_bbox(points)))
+#' ## Extract cellindices for points
+gts_cellindex(geometry = points)
+## Extract cellindices for polygon
+gts_cellindex(geometry = pol)
 }
