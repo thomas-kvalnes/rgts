@@ -30,9 +30,8 @@ xx <- c(58200, 74225, 58200, 74226)
 yy <- c(6708225, 6708225, 6715025, 6715025)
 pol <- st_as_sf(x = data.frame(x = xx, y = yy), coords = c("x", "y"), crs = 25833)
 pol <- st_as_sf(st_as_sfc(st_bbox(pol)))
-pol <- gts_sf2json(pol)
 ## Look up cellindices
-cells <- gts_cellindex(polygon = pol)
+cells <- gts_cellindex(geometry = pol)
 ## Download data
 gts_dl_cellindex(cellindex = cells, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01")
 gts_dl_cellindex(cellindex = cells, env_layer = "tm3h", start_date = "2023-12-01T06", end_date = "2023-12-01T09")

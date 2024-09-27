@@ -24,6 +24,7 @@
 #' @importFrom sf st_crs
 #' @importFrom sf st_geometry
 #' @importFrom sf st_geometry_type
+#' @importFrom sf st_intersects
 #' @importFrom sf st_zm
 #' @importFrom stars st_as_stars
 #' @importFrom stars st_cells

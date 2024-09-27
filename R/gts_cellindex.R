@@ -36,11 +36,11 @@ gts_cellindex <- function(geometry){
                        "POINT" = FALSE)
 
   # Intersects
-  geo_int <- stars::st_intersects(x = grid, y = geometry, as_points = int_method)
+  geo_int <- st_intersects(x = grid, y = geometry, as_points = int_method)
   geo_int <- lengths(geo_int)
 
   # Fint center coordinates of grid cells which intersects
-  xy_int <- stars::st_coordinates(grid)[geo_int>0, ]
+  xy_int <- st_coordinates(grid)[geo_int>0, ]
   # As sf
   xy_int <- st_as_sf(xy_int, coords=c("x", "y"), crs = 25833)
 
