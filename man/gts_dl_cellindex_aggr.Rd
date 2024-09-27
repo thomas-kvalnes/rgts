@@ -40,7 +40,7 @@ xx <- c(58200, 74225, 58200, 74226)
 yy <- c(6708225, 6708225, 6715025, 6715025)
 pol <- st_as_sf(x = data.frame(x = xx, y = yy), coords = c("x", "y"), crs = 25833)
 pol <- st_as_sf(st_as_sfc(st_bbox(pol)))
-pol <- sf_to_json(pol)
+pol <- gts_sf_to_json(pol)
 ## Look up cellindices
 cells <- gts_cellindex(polygon = pol)
 ## Download data

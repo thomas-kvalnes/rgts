@@ -13,9 +13,9 @@
 #' pol <- st_as_sf(x = data.frame(x = xx, y = yy), coords = c("x", "y"), crs = 25833)
 #' pol <- st_as_sf(st_as_sfc(st_bbox(pol)))
 #' ## Convert to json
-#' sf_to_json(pol)
+#' gts_sf_to_json(pol)
 #' @export
-sf_to_json <- function(x) {
+gts_sf_to_json <- function(x) {
 
   # make table with json types
   sf_json_type <- data.frame(sf = c("POINT", "MULTIPOINT", "LINESTRING", "MULTILINESTRING", "POLYGON", "MULTIPOLYGON"), json = c("point", "points", "paths", "paths", "rings", "rings"))
