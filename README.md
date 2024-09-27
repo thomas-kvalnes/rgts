@@ -79,7 +79,7 @@ Hardangervidda in Norway.
 ``` r
 ## Create a sf polygon
 library(sf)
-#> Linking to GEOS 3.11.2, GDAL 3.7.2, PROJ 9.3.0; sf_use_s2() is TRUE
+#> Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 xx <- c(58200, 74225, 58200, 74226)
 yy <- c(6708225, 6708225, 6715025, 6715025)
 pol <- st_as_sf(x = data.frame(x = xx, y = yy), coords = c("x", "y"), crs = 25833)
@@ -93,7 +93,7 @@ polygon to json using the function sf_to_json(). We only show the first
 
 ``` r
 ## Convert to json
-pol <- sf_to_json(pol)
+pol <- gts_sf_to_json(pol)
 ## Download data
 head(gts_dl_polygon(polygon = pol, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01"), 10)
 #>    cellindex altitude       date  time time_resolution_minutes    unit    tm
