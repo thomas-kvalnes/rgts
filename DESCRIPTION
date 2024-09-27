@@ -23,6 +23,7 @@ Imports:
     reshape2,
     rlang,
     sf,
+    stars,
     stringr
 URL: https://github.com/thomas-kvalnes/rgts
 BugReports: https://github.com/thomas-kvalnes/rgts/issues

@@ -25,6 +25,7 @@
 #' @importFrom sf st_geometry
 #' @importFrom sf st_geometry_type
 #' @importFrom sf st_zm
+#' @importFrom stars st_as_stars
 #' @importFrom stringr str_remove_all
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_split
