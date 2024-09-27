@@ -25,30 +25,38 @@ gts_cellindex <- function(geometry){
   geo_type <- st_geometry_type(geometry)
 
   # Check geometry type
-  if(!all(geo_type %in% c("POLYGON", "MULTIPOLYGON", "POINT")) | (sum(c("POLYGON", "MULTIPOLYGON", "POINT") %in% geo_type) > 1)){
+  if(!all(geo_type %in% c("POLYGON", "MULTIPOLYGON", "POINT")) | ((sum(c("POLYGON", "POINT") %in% geo_type) > 1) | (sum(c("MULTIPOLYGON", "POINT") %in% geo_type) > 1))){
+
     stop("'geometry' should be one of 'POLYGON', 'MULTIPOLYGON' or 'POINT'")
+
   }
 
-  # Select intersection method
-  int_method <- switch(as.character(geo_type)[1],
-                       "POLYGON" = TRUE,
-                       "MULTIPOLYGON" = TRUE,
-                       "POINT" = FALSE)
+  # Polygons
+  if(all(geo_type %in% c("POLYGON", "MULTIPOLYGON"))){
 
-  # Intersects
-  geo_int <- st_intersects(x = grid, y = geometry, as_points = int_method)
-  geo_int <- lengths(geo_int)
+    # Intersect grid and polygon
+    geo_int <- st_intersects(x = grid, y = geometry, as_points = TRUE)
+    geo_int <- lengths(geo_int)
 
-  # Fint center coordinates of grid cells which intersects
-  xy_int <- st_coordinates(grid)[geo_int>0, ]
-  # As sf
-  xy_int <- st_as_sf(xy_int, coords=c("x", "y"), crs = 25833)
+    # Find center coordinates of grid cells which intersects
+    coords <- st_coordinates(grid)[geo_int>0, ]
 
-  # Find cellindices for GTS data (cellindex = stars cellindex - 1)
-  res <- st_cells(x = grid, sf = xy_int)-1
+    # As sf
+    coords <- st_as_sf(coords, coords = c("x", "y"), crs = 25833)
+  }
+
+  # Points
+  if(all(geo_type %in% "POINT")){
+
+    coords <- geometry
+
+  }
+
+  # Extract cellindex
+  res <- st_extract(x = grid, at = coords)
 
   # Return
-  as.vector(res)
+  as.vector(res$cellindex)
 
 }
 #'
