@@ -22,7 +22,8 @@ A data frame with the GTS data associated with each point for each step in the t
 }
 \description{
 Downloads data for a point (coordinate) in a grid cell (coordinate system: (EPSG: 25833)) at the given time resolution. Several coordinates can be provided at once. Time resolution is given by the choice of environmental variable (env_layer) and start_date/end_date.  E.g. "tm3h" for "2023-12-01T06" is three hour data for temperature collected at 06:00 and "tm" for "2023-12-01" is the daily average temperature.\cr \cr
-\emph{Note: The API has a cap at ~635'000 values in each download and ends with an error for larger queries.}
+\emph{Note 1: The API has a cap at ~635'000 values in each download and ends with an error for larger queries.} \cr \cr
+\emph{Note 2: The API ends with an error if some of the points have the same cellindex. Use \code{\link[=gts_cellindex]{gts_cellindex()}} to check.}
 }
 \examples{
 ## Create a data frame with coordinates
