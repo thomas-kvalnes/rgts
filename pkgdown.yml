@@ -1,0 +1,8 @@
+pandoc: 3.1.11
+pkgdown: 2.1.1
+pkgdown_sha: ~
+articles: {}
+last_built: 2024-09-29T09:40Z
+urls:
+  reference: https://thomas-kvalnes.github.io/rgts/reference
+  article: https://thomas-kvalnes.github.io/rgts/articles
