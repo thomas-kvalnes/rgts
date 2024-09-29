@@ -6,12 +6,15 @@
 \alias{rgts-package}
 \title{rgts: Conveniently download gridded time series data for Norway from NVE}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 A set of functions for accessing and downloading the GridTimeSeries (GTS) data (api.nve.no/doc/gridtimeseries-data-gts/) from the Norwegian Water Resources and Energy Directorate (NVE). This data reposiory contains 1x1 km gridded time series data for Norway and includes several weather and environmental parameters, such as temperature, precipitation, wind direction and strength and snow depth.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://github.com/thomas-kvalnes/rgts}
+  \item \url{https://thomas-kvalnes.github.io/rgts/}
   \item Report bugs at \url{https://github.com/thomas-kvalnes/rgts/issues}
 }
 

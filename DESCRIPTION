@@ -25,5 +25,5 @@ Imports:
     sf,
     stars,
     stringr
-URL: https://github.com/thomas-kvalnes/rgts
+URL: https://github.com/thomas-kvalnes/rgts, https://thomas-kvalnes.github.io/rgts/
 BugReports: https://github.com/thomas-kvalnes/rgts/issues
