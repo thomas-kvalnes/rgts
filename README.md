@@ -16,7 +16,9 @@ km gridded time series data for Norway and includes several weather and
 environmental parameters, such as temperature, precipitation, wind
 direction and strength and snow depth. Data is available at 1h, 3h and
 daily intervals depending on the variable of interest. Many of the daily
-variables go back from present to 1957.
+variables go back from present to 1957. Questions about the data should
+be directed to NVE, the author only maintains the rgts-package which
+access the data.
 
 ## Installation
 
