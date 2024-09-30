@@ -4,7 +4,14 @@
 \alias{gts_dl_cellindex}
 \title{Download cellwise values for CellIndex}
 \usage{
-gts_dl_cellindex(cellindex, env_layer, start_date, end_date, verbose = FALSE)
+gts_dl_cellindex(
+  cellindex,
+  env_layer,
+  start_date,
+  end_date,
+  return_raw = FALSE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{cellindex}{A vector with cellindices for which GTS data should be downloaded.}
@@ -14,6 +21,8 @@ gts_dl_cellindex(cellindex, env_layer, start_date, end_date, verbose = FALSE)
 \item{start_date}{The start date given as: 'YYYY-MM-DD'. If querying three or one hour data, the hour should be given like this: format: 'YYYY-MM-DDT06'}
 
 \item{end_date}{The end date. See start_date.}
+
+\item{return_raw}{Set to TRUE to return the raw results from the query (a list) without coercing to a data.frame.}
 
 \item{verbose}{Set to TRUE to print the query to the console (default FALSE).}
 }

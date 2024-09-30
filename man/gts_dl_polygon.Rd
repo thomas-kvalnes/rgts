@@ -4,7 +4,14 @@
 \alias{gts_dl_polygon}
 \title{Download cellwise values for polygon}
 \usage{
-gts_dl_polygon(polygon, env_layer, start_date, end_date, verbose = FALSE)
+gts_dl_polygon(
+  polygon,
+  env_layer,
+  start_date,
+  end_date,
+  return_raw = FALSE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{polygon}{A polygon as json rings with spatialReference. Use \code{\link[=sf_to_json]{sf_to_json()}} to convert from sf til json. Should be in coordinate system EPSG:25833.}
@@ -14,6 +21,8 @@ gts_dl_polygon(polygon, env_layer, start_date, end_date, verbose = FALSE)
 \item{start_date}{The start date given as: 'YYYY-MM-DD'. If querying three or one hour data, the hour should be given like this: format: 'YYYY-MM-DDT06'}
 
 \item{end_date}{The end date. See start_date.}
+
+\item{return_raw}{Set to TRUE to return the raw results from the query (a list) without coercing to a data.frame.}
 
 \item{verbose}{Set to TRUE to print the query to the console (default FALSE).}
 }

@@ -8,6 +8,7 @@
 #' @param start_date The start date given as: 'YYYY-MM-DD'. If querying three or one hour data, the hour should be given like this: format: 'YYYY-MM-DDT06'
 #' @param end_date The end date. See start_date.
 #' @param method The method for aggregating values ("sum", "min", "max", "avg" or "median")
+#' @param return_raw Set to TRUE to return the raw results from the query (a list) without coercing to a data.frame (only available for daily time steps).
 #' @param verbose Set to TRUE to print the query to the console (default FALSE).
 #' @return A data frame with the GTS data aggregated across grid cells in the polygon for each step in the time resolution, e.g. daily values or values for each hour.
 #' @seealso [gts_dl_polygon()] to download cellwise GTS data for polygon.
@@ -24,7 +25,7 @@
 #' gts_dl_polygon_aggr(polygon = pol, env_layer = "tm1h", start_date = "2023-12-01T06", end_date = "2023-12-01T12", method = "avg")
 #' gts_dl_polygon_aggr(polygon = pol, env_layer = "tm3h", start_date = "2023-12-01T06", end_date = "2023-12-01T12", method = "avg")
 #' @export
-gts_dl_polygon_aggr <- function(polygon, env_layer, start_date, end_date, method, verbose = FALSE){
+gts_dl_polygon_aggr <- function(polygon, env_layer, start_date, end_date, method, return_raw = FALSE, verbose = FALSE){
 
   # URL to download API
   url_api <- "http://gts.nve.no/api/AggregationTimeSeries/ByGeoJson"
@@ -55,6 +56,11 @@ gts_dl_polygon_aggr <- function(polygon, env_layer, start_date, end_date, method
     # Collect results
     res <- resp |> resp_body_json()
 
+    # Return raw data values
+    if(return_raw){
+      return(res)
+    }
+
     # NoDataValue
     nodata <- res$NoDataValue
 
@@ -68,7 +74,7 @@ gts_dl_polygon_aggr <- function(polygon, env_layer, start_date, end_date, method
     resdf <- data.frame(date = date(datetime), variable = res$Theme, unit = res$Unit, time = time, time_resolution_minutes = res$TimeResolution, values = unlist(res$Data), method = res$Method)
 
     # Replace NoDataValue by NA
-    resdf[resdf$values == nodata]$values <- NA
+    resdf$values[resdf$values == nodata] <- NA
 
     # Cast
     resdf <- dcast(resdf , formula = date + time + time_resolution_minutes + unit ~ variable + method, value.var = "values")
@@ -156,7 +162,7 @@ gts_dl_polygon_aggr <- function(polygon, env_layer, start_date, end_date, method
     resdf <- dcast(resdf , formula = date + time + time_resolution_minutes + unit ~ variable + method, value.var = "values")
 
     # Replace NoDataValue by NA
-    resdf[resdf$values == nodata]$values <- NA
+    resdf$values[resdf$values == nodata] <- NA
 
     # Return
     return(resdf)

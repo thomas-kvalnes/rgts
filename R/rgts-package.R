@@ -29,6 +29,7 @@
 #' @importFrom stars st_as_stars
 #' @importFrom stars st_cells
 #' @importFrom stars st_extract
+#' @importFrom stars st_intersects
 #' @importFrom stringr str_remove_all
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_split

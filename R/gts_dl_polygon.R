@@ -6,6 +6,7 @@
 #' @param   env_layer The quoted abbreviation for the environmental layer to download. E.g. Daily precipitaion = "rr", Temperature =  "tm", Snow depth =  "sd".
 #' @param start_date The start date given as: 'YYYY-MM-DD'. If querying three or one hour data, the hour should be given like this: format: 'YYYY-MM-DDT06'
 #' @param end_date The end date. See start_date.
+#' @param return_raw Set to TRUE to return the raw results from the query (a list) without coercing to a data.frame.
 #' @param verbose Set to TRUE to print the query to the console (default FALSE).
 #' @return A data frame with the GTS data associated with each grid cell for each step in the time resolution, e.g. daily values or values for each hour.
 #' @examples
@@ -20,7 +21,7 @@
 #' gts_dl_polygon(polygon = pol, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01")
 #' gts_dl_polygon(polygon = pol, env_layer = "tm1h", start_date = "2023-12-01T00", end_date = "2023-12-01T01")
 #' @export
-gts_dl_polygon <- function(polygon, env_layer, start_date, end_date, verbose = FALSE){
+gts_dl_polygon <- function(polygon, env_layer, start_date, end_date, return_raw = FALSE, verbose = FALSE){
 
   # URL to download API
   url_api <- "http://gts.nve.no/api/AreaTimeSeries/ByGeoJson"
@@ -38,6 +39,11 @@ gts_dl_polygon <- function(polygon, env_layer, start_date, end_date, verbose = F
 
   # Collect results
   res <- resp |> resp_body_json()
+
+  # Return raw data values
+  if(return_raw){
+    return(res)
+  }
 
   # Find time resolution
   timeres <- res$TimeResolution
@@ -68,7 +74,7 @@ gts_dl_polygon <- function(polygon, env_layer, start_date, end_date, verbose = F
   resdf$time_resolution_minutes <- res$TimeResolution
 
   # Replace NoDataValue by NA
-  resdf[resdf$values == nodata]$values <- NA
+  resdf$values[resdf$values == nodata] <- NA
 
   # Cast
   resdf <- dcast(resdf , formula = cellindex + altitude + date + time + time_resolution_minutes + unit ~ variable, value.var = "values")

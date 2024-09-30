@@ -10,6 +10,7 @@ gts_dl_polygon_aggr(
   start_date,
   end_date,
   method,
+  return_raw = FALSE,
   verbose = FALSE
 )
 }
@@ -23,6 +24,8 @@ gts_dl_polygon_aggr(
 \item{end_date}{The end date. See start_date.}
 
 \item{method}{The method for aggregating values ("sum", "min", "max", "avg" or "median")}
+
+\item{return_raw}{Set to TRUE to return the raw results from the query (a list) without coercing to a data.frame (only available for daily time steps).}
 
 \item{verbose}{Set to TRUE to print the query to the console (default FALSE).}
 }
