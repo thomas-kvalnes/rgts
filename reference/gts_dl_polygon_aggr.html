@@ -19,7 +19,8 @@ Warning: This function is extremely slow for 1 and 3 hour time steps as the API 
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/rgts.html">Get started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/thomas-kvalnes/rgts/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -110,9 +111,19 @@ Warning: This function is extremely slow for 1 and 3 hour time steps as the API 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 2023-12-03 00:00                    1440 Celcius -11.95179</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 2023-12-04 00:00                    1440 Celcius -12.03571</span>
 <span class="r-in"><span><span class="fu">gts_dl_polygon_aggr</span><span class="op">(</span>polygon <span class="op">=</span> <span class="va">pol</span>, env_layer <span class="op">=</span> <span class="st">"tm1h"</span>, start_date <span class="op">=</span> <span class="st">"2023-12-01T06"</span>, end_date <span class="op">=</span> <span class="st">"2023-12-01T12"</span>, method <span class="op">=</span> <span class="st">"avg"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in `$&lt;-.data.frame`(`*tmp*`, "values", value = logical(0)):</span> replacement has 0 rows, data has 7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         date  time time_resolution_minutes    unit  tm1h_avg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 2023-12-01 06:00                      60 Celcius -17.05893</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 2023-12-01 07:00                      60 Celcius -20.72232</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 2023-12-01 08:00                      60 Celcius -20.58750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 2023-12-01 09:00                      60 Celcius -16.98482</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 2023-12-01 10:00                      60 Celcius -19.91161</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 2023-12-01 11:00                      60 Celcius -14.42768</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 2023-12-01 12:00                      60 Celcius -13.41786</span>
 <span class="r-in"><span><span class="fu">gts_dl_polygon_aggr</span><span class="op">(</span>polygon <span class="op">=</span> <span class="va">pol</span>, env_layer <span class="op">=</span> <span class="st">"tm3h"</span>, start_date <span class="op">=</span> <span class="st">"2023-12-01T06"</span>, end_date <span class="op">=</span> <span class="st">"2023-12-01T12"</span>, method <span class="op">=</span> <span class="st">"avg"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in `$&lt;-.data.frame`(`*tmp*`, "values", value = logical(0)):</span> replacement has 0 rows, data has 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         date  time time_resolution_minutes    unit  tm3h_avg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 2023-12-01 06:00                     180 Celcius -21.57500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 2023-12-01 09:00                     180 Celcius -21.32500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 2023-12-01 12:00                     180 Celcius -17.34554</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

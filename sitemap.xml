@@ -1,6 +1,8 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://thomas-kvalnes.github.io/rgts/404.html</loc></url>
 <url><loc>https://thomas-kvalnes.github.io/rgts/LICENSE.html</loc></url>
+<url><loc>https://thomas-kvalnes.github.io/rgts/articles/index.html</loc></url>
+<url><loc>https://thomas-kvalnes.github.io/rgts/articles/rgts.html</loc></url>
 <url><loc>https://thomas-kvalnes.github.io/rgts/authors.html</loc></url>
 <url><loc>https://thomas-kvalnes.github.io/rgts/index.html</loc></url>
 <url><loc>https://thomas-kvalnes.github.io/rgts/reference/gts_cellindex.html</loc></url>
