@@ -24,7 +24,7 @@ library(rgts)
 
 rgts is an R package which makes it easy to download data from a 1x1 km gridded database by NVE. The package use well known R syntax to connect to the data base, downloads data and casts it into easily accessible data.frames. Each row contains the data of a grid cell at a given date, time and time resolution.
 
-\emph{To be continued...}
+To be continued...
 
 
 
