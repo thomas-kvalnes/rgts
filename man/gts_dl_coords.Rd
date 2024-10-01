@@ -40,5 +40,5 @@ coords <- data.frame(x = c(58200, 74225), y = c(6708225, 6715025))
 ## Download data
 gts_dl_coords(coords = coords, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-02")
 gts_dl_coords(coords = coords, env_layer = "tm3h", start_date = "2023-12-01T23", end_date = "2023-12-02T06")
-gts_dl_coords(coords = coords, env_layer = "tm1h", start_date = "2023-12-01T23", end_date = "2023-12-02T06")
+head(gts_dl_coords(coords = coords, env_layer = "tm1h", start_date = "2023-12-01T23", end_date = "2023-12-02T06"))
 }

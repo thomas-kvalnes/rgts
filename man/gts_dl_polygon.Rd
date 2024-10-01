@@ -42,6 +42,6 @@ pol <- st_as_sf(x = data.frame(x = xx, y = yy), coords = c("x", "y"), crs = 2583
 pol <- st_as_sf(st_as_sfc(st_bbox(pol)))
 pol <- gts_sf2json(pol)
 ## Download data
-gts_dl_polygon(polygon = pol, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01")
-gts_dl_polygon(polygon = pol, env_layer = "tm1h", start_date = "2023-12-01T00", end_date = "2023-12-01T01")
+head(gts_dl_polygon(polygon = pol, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01"))
+head(gts_dl_polygon(polygon = pol, env_layer = "tm1h", start_date = "2023-12-01T00", end_date = "2023-12-01T01"))
 }

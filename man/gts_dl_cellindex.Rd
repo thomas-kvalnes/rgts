@@ -43,8 +43,8 @@ pol <- st_as_sf(st_as_sfc(st_bbox(pol)))
 ## Look up cellindices
 cells <- gts_cellindex(geometry = pol)
 ## Download data
-gts_dl_cellindex(cellindex = cells, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01")
-gts_dl_cellindex(cellindex = cells, env_layer = "tm3h", start_date = "2023-12-01T06", end_date = "2023-12-01T09")
+head(gts_dl_cellindex(cellindex = cells, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01"))
+head(gts_dl_cellindex(cellindex = cells, env_layer = "tm3h", start_date = "2023-12-01T06", end_date = "2023-12-01T09"))
 }
 \seealso{
 \code{\link[=gts_cellindex]{gts_cellindex()}} to find the cellindices for points or all raster cells in a polygon.
