@@ -116,41 +116,21 @@ Note 2: The API ends with an error if some of the points have the same cellindex
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 Celcius -21.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 Celcius -16.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 Celcius -13.8</span>
-<span class="r-in"><span><span class="fu">gts_dl_coords</span><span class="op">(</span>coords <span class="op">=</span> <span class="va">coords</span>, env_layer <span class="op">=</span> <span class="st">"tm1h"</span>, start_date <span class="op">=</span> <span class="st">"2023-12-01T23"</span>, end_date <span class="op">=</span> <span class="st">"2023-12-02T06"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        x       y cellindex altitude       date  time time_resolution_minutes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  58200 6708225   1542878     1294 2023-12-01 23:00                      60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  58200 6708225   1542878     1294 2023-12-02 00:00                      60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  58200 6708225   1542878     1294 2023-12-02 01:00                      60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  58200 6708225   1542878     1294 2023-12-02 02:00                      60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  58200 6708225   1542878     1294 2023-12-02 03:00                      60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  58200 6708225   1542878     1294 2023-12-02 04:00                      60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  58200 6708225   1542878     1294 2023-12-02 05:00                      60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  58200 6708225   1542878     1294 2023-12-02 06:00                      60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  74225 6715025   1534529     1371 2023-12-01 23:00                      60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 74225 6715025   1534529     1371 2023-12-02 00:00                      60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 74225 6715025   1534529     1371 2023-12-02 01:00                      60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 74225 6715025   1534529     1371 2023-12-02 02:00                      60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 74225 6715025   1534529     1371 2023-12-02 03:00                      60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 74225 6715025   1534529     1371 2023-12-02 04:00                      60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 74225 6715025   1534529     1371 2023-12-02 05:00                      60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 74225 6715025   1534529     1371 2023-12-02 06:00                      60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       unit  tm1h</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  Celcius -17.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  Celcius -16.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  Celcius -15.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  Celcius -14.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  Celcius -15.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  Celcius -14.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  Celcius -11.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  Celcius -13.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  Celcius -14.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Celcius -14.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 Celcius -14.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Celcius -14.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Celcius -14.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Celcius -14.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Celcius -11.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Celcius -13.3</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">gts_dl_coords</span><span class="op">(</span>coords <span class="op">=</span> <span class="va">coords</span>, env_layer <span class="op">=</span> <span class="st">"tm1h"</span>, start_date <span class="op">=</span> <span class="st">"2023-12-01T23"</span>, end_date <span class="op">=</span> <span class="st">"2023-12-02T06"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       x       y cellindex altitude       date  time time_resolution_minutes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 58200 6708225   1542878     1294 2023-12-01 23:00                      60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 58200 6708225   1542878     1294 2023-12-02 00:00                      60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 58200 6708225   1542878     1294 2023-12-02 01:00                      60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 58200 6708225   1542878     1294 2023-12-02 02:00                      60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 58200 6708225   1542878     1294 2023-12-02 03:00                      60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 58200 6708225   1542878     1294 2023-12-02 04:00                      60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      unit  tm1h</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Celcius -17.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Celcius -16.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Celcius -15.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Celcius -14.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Celcius -15.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Celcius -14.3</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
