@@ -20,8 +20,8 @@
 #' ## Look up cellindices
 #' cells <- gts_cellindex(geometry = pol)
 #' ## Download data
-#' gts_dl_cellindex(cellindex = cells, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01")
-#' gts_dl_cellindex(cellindex = cells, env_layer = "tm3h", start_date = "2023-12-01T06", end_date = "2023-12-01T09")
+#' head(gts_dl_cellindex(cellindex = cells, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01"))
+#' head(gts_dl_cellindex(cellindex = cells, env_layer = "tm3h", start_date = "2023-12-01T06", end_date = "2023-12-01T09"))
 #' @export
 gts_dl_cellindex <- function(cellindex, env_layer, start_date, end_date, return_raw = FALSE, verbose = FALSE){
 

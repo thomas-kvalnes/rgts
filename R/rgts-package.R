@@ -14,6 +14,7 @@
 #' @importFrom httr2 resp_body_json
 #' @importFrom lubridate date
 #' @importFrom lubridate dmy_hm
+#' @importFrom lubridate ymd_h
 #' @importFrom magrittr %>%
 #' @importFrom reshape2 dcast
 #' @importFrom rlang .data

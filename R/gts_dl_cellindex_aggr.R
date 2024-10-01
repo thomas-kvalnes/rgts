@@ -101,22 +101,11 @@ gts_dl_cellindex_aggr <- function(cellindex, env_layer, start_date, end_date, me
     # Run request and collect results - first time step
     res <- req |> req_perform() |> resp_body_json()
 
-    # Make request - last time step
-    req2 <- request(url_api) |>
-      req_body_json(list(Theme = env_layer, StartDate = end_date, EndDate = end_date, Format = "json", Method = method, CellIndexCsv = cellindex))
-
-    # Dry run - last time step
-    if(verbose)
-      req2 |> req_dry_run()
-
-    # Run request and collect results - last time step
-    res2 <- req2 |> req_perform() |> resp_body_json()
-
     # NoDataValue
     nodata <- res$NoDataValue
 
     # Date and time - sequence from first and last time step
-    datetime <- seq(dmy_hm(res$StartDate), dmy_hm(res2$StartDate), by = datetime_steps)
+    datetime <- seq(dmy_hm(res$StartDate), ymd_h(end_date), by = datetime_steps)
 
     # Time
     time <- format(as.POSIXlt(as_hms(datetime)), "%H:%M")
@@ -125,23 +114,15 @@ gts_dl_cellindex_aggr <- function(cellindex, env_layer, start_date, end_date, me
     resdf <- data.frame(date = date(datetime), variable = res$Theme, unit = res$Unit, time = time, time_resolution_minutes = res$TimeResolution, values = NA, method = res$Method)
 
     # Insert first value
-    resdf$values[resdf$date == date(datetime[1]) & resdf$time == time[1]] <- unlist(res$Data)
-
-    # Insert last value (if last date-time is final date-time in data frame)
-    # Indicator for last value
-    lv <- 0
-    # Insert
-    if(dmy_hm(res2$StartDate) == tail(datetime, 1)){
-      resdf$values[resdf$date == tail(resdf$date, 1) & resdf$time == tail(resdf$time, 1)] <- unlist(res2$Data)
-      lv <- 1
-    }
+    resdf$values[1] <- unlist(res$Data)
 
     # Loop through other time steps (if more time steps to run)
-    if((nrow(resdf) == 2 & lv == 0)|(nrow(resdf) > 2)){
-      for (i in 2:(nrow(resdf)-lv)){
+    if(nrow(resdf) > 1){
+      for (i in 2:nrow(resdf)){
 
         # Hour
         hh <- str_split_fixed(string = resdf$time[i], pattern = ":", n = 2)[,1]
+
         # Make start and end date
         start_i <- paste0(resdf$date[i], "T", hh)
         end_i <- start_i
@@ -163,11 +144,11 @@ gts_dl_cellindex_aggr <- function(cellindex, env_layer, start_date, end_date, me
       }
     }
 
-    # Cast
-    resdf <- dcast(resdf , formula = date + time + time_resolution_minutes + unit ~ variable + method, value.var = "values")
-
     # Replace NoDataValue by NA
     resdf$values[resdf$values == nodata] <- NA
+
+    # Cast
+    resdf <- dcast(resdf , formula = date + time + time_resolution_minutes + unit ~ variable + method, value.var = "values")
 
     # Return
     return(resdf)

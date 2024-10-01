@@ -1,0 +1,31 @@
+---
+title: "rgts"
+output: rmarkdown::html_vignette
+description:
+  An introduction to accessing GridTimeSeries (GTS) data with rgts.
+vignette: >
+  %\VignetteIndexEntry{rgts}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(rgts)
+```
+
+## Introduction to rgts
+
+rgts is an R package which makes it easy to download data from a 1x1 km gridded database by NVE. The package use well known R syntax to connect to the data base, downloads data and casts it into easily accessible data.frames. Each row contains the data of a grid cell at a given date, time and time resolution.
+
+\emph{To be continued...}
+
+
+
+

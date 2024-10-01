@@ -18,8 +18,8 @@
 #' pol <- st_as_sf(st_as_sfc(st_bbox(pol)))
 #' pol <- gts_sf2json(pol)
 #' ## Download data
-#' gts_dl_polygon(polygon = pol, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01")
-#' gts_dl_polygon(polygon = pol, env_layer = "tm1h", start_date = "2023-12-01T00", end_date = "2023-12-01T01")
+#' head(gts_dl_polygon(polygon = pol, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01"))
+#' head(gts_dl_polygon(polygon = pol, env_layer = "tm1h", start_date = "2023-12-01T00", end_date = "2023-12-01T01"))
 #' @export
 gts_dl_polygon <- function(polygon, env_layer, start_date, end_date, return_raw = FALSE, verbose = FALSE){
 
