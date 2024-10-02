@@ -4,8 +4,8 @@
 #'
 #' @return A table with details the parameters that are available in the GridTimeSeries data. Use the variable names in the table when downloading data.
 #' @examples
-#' ## List parameters
-#' gts_parameters()
+#' ## List first 5 parameters
+#' head(gts_parameters(), 5)
 #' @export
 gts_parameters <- function(){
 
