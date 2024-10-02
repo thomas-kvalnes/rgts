@@ -67,19 +67,179 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomas-kvalnes/rgts" class="external-link">rgts</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="introduction-to-rgts">Introduction to rgts<a class="anchor" aria-label="anchor" href="#introduction-to-rgts"></a>
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>rgts is an R package which makes it easy to download data from a 1x1
-km gridded database by NVE. The package use well known R syntax to
-connect to the data base, downloads data and casts it into easily
-accessible data.frames. Each row contains the data of a grid cell at a
-given date, time and time resolution.</p>
-<p>To be continued…</p>
+<p>rgts is an R package which makes it easier to download the
+GridTimeSeries (GTS) data available in a 1x1 km grid from NVE. The
+package use well known R syntax to connect to the data base, downloads
+data and casts it into easily accessible data.frames. Each row contains
+the data of a grid cell at a given date and time.</p>
+<p>Below is an overview of how to use the package. This brief
+introduction assumes that you are familiar with working with spatial
+data in R. We make use of the <a href="https://r-spatial.github.io/sf/index.html" class="external-link">sf</a> and <a href="https://r-spatial.github.io/stars/index.html" class="external-link">stars</a> packages.
+Consult these packages as needed. First we load the <code>rgts</code>,
+<code>sf</code> and <code>stars</code> packages.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomas-kvalnes/rgts" class="external-link">rgts</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required package: abind</span></span></code></pre></div>
 </div>
-  </main>
+<div class="section level2">
+<h2 id="types-of-input">Types of input<a class="anchor" aria-label="anchor" href="#types-of-input"></a>
+</h2>
+<p>To download GTS data you will need at least one out of three possible
+types of spatial data as input to the functions.</p>
+<ul>
+<li>Points with coordinates</li>
+<li>An area represented as a polygon</li>
+<li>Cellindices</li>
+</ul>
+<p>The first two supposedly do not require too much explanation, either
+you download data for one or more points of interest (e.g. the position
+of an animal) or for one or more areas of interest (e.g. a protected
+area). The third on the other hand is less clear. The GTS data assignes
+a cellindex to each 1x1 km grid cell in Norway. This index starts on 0
+for the cell in the north-western corner and numbers cells continuously
+left to right one row at the time. The function
+<code><a href="../reference/gts_create_grid.html">gts_create_grid()</a></code> builds a stars raster with cellindices as
+an attribute.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## Build raster</span></span>
+<span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gts_create_grid.html">gts_create_grid</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">grid</span></span>
+<span><span class="co">#&gt; stars object with 2 dimensions and 1 attribute</span></span>
+<span><span class="co">#&gt; attribute(s), summary of first 1e+05 cells:</span></span>
+<span><span class="co">#&gt;            Min.  1st Qu.  Median    Mean  3rd Qu.  Max.</span></span>
+<span><span class="co">#&gt; cellindex     0 24999.75 49999.5 49999.5 74999.25 99999</span></span>
+<span><span class="co">#&gt; dimension(s):</span></span>
+<span><span class="co">#&gt;   from   to offset delta                refsys x/y</span></span>
+<span><span class="co">#&gt; x    1 1195 -75000  1000 ETRS89 / UTM zone 33N [x]</span></span>
+<span><span class="co">#&gt; y    1 1550  8e+06 -1000 ETRS89 / UTM zone 33N [y]</span></span>
+<span><span class="co">## Extract the cellindex of the first five cells</span></span>
+<span><span class="va">grid</span><span class="op">$</span><span class="va">cellindex</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="co">#&gt; [1] 0 1 2 3 4</span></span></code></pre></div>
+<p>What you see is that the cellindex starts at 0 and is equal to
+(cellnumber - 1) for the stars raster. This is important to remember
+when we want to plot values on a map.</p>
+</div>
+<div class="section level2">
+<h2 id="working-with-cellindices">Working with cellindices<a class="anchor" aria-label="anchor" href="#working-with-cellindices"></a>
+</h2>
+<p>How do we obtain cellindices then? If you have a point or area of
+interest, the function <code><a href="../reference/gts_cellindex.html">gts_cellindex()</a></code> is used to extract
+the cellindices for the grid cells which contain a point or which are
+within an area. What you need as input to the function is the geometry,
+point(s) or polygon(s), as sf objects. For points this can be done like
+like this:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## Create a data frame with coordinates</span></span>
+<span><span class="va">coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">58200</span>, <span class="fl">74225</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6708225</span>, <span class="fl">6715025</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">coords</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">25833</span><span class="op">)</span></span>
+<span><span class="co">## Extract cellindices</span></span>
+<span><span class="fu"><a href="../reference/gts_cellindex.html">gts_cellindex</a></span><span class="op">(</span>geometry <span class="op">=</span> <span class="va">coords</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 1542878 1534529</span></span></code></pre></div>
+<p>These cellindices can later be used to query for GTS data. Generally,
+performing queries using cellindices as input is faster than using
+coordinates or polygons. This is because the latter two requires the API
+to search for cellindices before looking up data.</p>
+</div>
+<div class="section level2">
+<h2 id="coordinate-system-and-transformation">Coordinate system and transformation<a class="anchor" aria-label="anchor" href="#coordinate-system-and-transformation"></a>
+</h2>
+<p>Work in progress…</p>
+</div>
+<div class="section level2">
+<h2 id="finding-variables">Finding variables<a class="anchor" aria-label="anchor" href="#finding-variables"></a>
+</h2>
+<p>Work in progress…</p>
+</div>
+<div class="section level2">
+<h2 id="download-1-coordinates">Download 1: Coordinates<a class="anchor" aria-label="anchor" href="#download-1-coordinates"></a>
+</h2>
+<p>Work in progress…</p>
+</div>
+<div class="section level2">
+<h2 id="download-2-polygons">Download 2: Polygons<a class="anchor" aria-label="anchor" href="#download-2-polygons"></a>
+</h2>
+<p>Work in progress…</p>
+</div>
+<div class="section level2">
+<h2 id="download-3-cellindices">Download 3: Cellindices<a class="anchor" aria-label="anchor" href="#download-3-cellindices"></a>
+</h2>
+<p>Work in progress…</p>
+</div>
+<div class="section level2">
+<h2 id="maps">Maps<a class="anchor" aria-label="anchor" href="#maps"></a>
+</h2>
+<p>Work in progress…</p>
+</div>
+<div class="section level2">
+<h2 id="troubleshooting">Troubleshooting<a class="anchor" aria-label="anchor" href="#troubleshooting"></a>
+</h2>
+<p>Sometimes what seems to be a valid query may fail and we need to do
+some troubleshooting. The download functions, with prefix
+<code>gts_dl_...</code>, have two optional arguments to aid this
+process. First, you may set <code>verbose</code> to <code>TRUE</code> to
+see exactly what is sent to the server. Then you can check that you have
+provided the input data correctly. Second, you can set
+<code>return_raw</code> to <code>TRUE</code> to have the function return
+the raw result as a <code>list</code> from the query. Then check that
+the output is as expected from the type of data and time span and
+resolution in the query.</p>
+<p>Here is how to handle a few specific recurring issues when using the
+<code>gts_dl_...</code>-functions which results in error messages from
+the server:</p>
+<ul>
+<li>Multiple coordinates for <code>points</code> in the same grid cell.
+<ul>
+<li>The API does no accept queries which ask for the data from the same
+grid cell multiple times. Find the cellindices using
+<code>gts_cellindex</code> and perform the query with unique cellindices
+using <code>gts_dl_cellindex</code> or
+<code>gts_dl_cellindex_aggr</code>.</li>
+</ul>
+</li>
+<li>Too large queries.
+<ul>
+<li>The API have a upper limit for the size of data which can be
+returned in each query. Limit the number of cellindices or the length of
+the time series in each query.</li>
+</ul>
+</li>
+<li>Missing data in database.
+<ul>
+<li>Sometimes the API returns an error message if the query requests
+data outside the available time spans for data or there is missing data
+in the database.</li>
+<li>Check the available time spans for data using
+<code>gts_parameters</code> to make sure that the query is valid.</li>
+<li>Next, try some shorter time spans to figure out if there are
+particular dates which have missing data.</li>
+<li>Generally the <code>gts_dl_cellindex</code> and
+<code>gts_dl_polygon</code> functions are less likely to return error
+messages for missing data than the <code>gts_dl_cellindex_aggr</code>
+and <code>gts_dl_polygon_aggr</code> functions. The former two functions
+is better to use for troubleshooting for missing data on single
+dates.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="getting-help">Getting help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
+</h2>
+<p>If you encounter a clear bug, please file a minimal reproducible
+example on <a href="https://github.com/thomas-kvalnes/rgts/issues" class="external-link">github</a>.
+Questions about the data needs to be addressed to <a href="https://www.nve.no/om-nve/kontakt/" class="external-link">NVE</a>. General R help can be
+found in the R Community on <a href="https://stackoverflow.com/collectives/r-language" class="external-link">Stack
+Overflow</a>. E-mail the maintainer for urgent or private
+communications.</p>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
