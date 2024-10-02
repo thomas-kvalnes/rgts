@@ -13,6 +13,6 @@ A table with details the parameters that are available in the GridTimeSeries dat
 Accesses the available parameters in the GridTimeSeries data and provides a table with the name of parameters, their time resolution, units of measurement and the years of available data.
 }
 \examples{
-## List parameters
-gts_parameters()
+## List first 5 parameters
+head(gts_parameters(), 5)
 }
