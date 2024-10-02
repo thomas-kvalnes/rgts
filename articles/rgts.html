@@ -90,8 +90,8 @@ Consult these packages as needed. First we load the <code>rgts</code>,
 <div class="section level2">
 <h2 id="types-of-input">Types of input<a class="anchor" aria-label="anchor" href="#types-of-input"></a>
 </h2>
-<p>To download GTS data you will need at least one out of three possible
-types of spatial data as input to the functions.</p>
+<p>To download GTS data you will need one out of three possible types of
+spatial data as input to the functions.</p>
 <ul>
 <li>Points with coordinates</li>
 <li>An area represented as a polygon</li>
@@ -99,13 +99,17 @@ types of spatial data as input to the functions.</p>
 </ul>
 <p>The first two supposedly do not require too much explanation, either
 you download data for one or more points of interest (e.g. the position
-of an animal) or for one or more areas of interest (e.g. a protected
-area). The third on the other hand is less clear. The GTS data assignes
-a cellindex to each 1x1 km grid cell in Norway. This index starts on 0
-for the cell in the north-western corner and numbers cells continuously
-left to right one row at the time. The function
-<code><a href="../reference/gts_create_grid.html">gts_create_grid()</a></code> builds a stars raster with cellindices as
-an attribute.</p>
+of an animal) or for one or more areas of interest (e.g. the outline of
+a protected area). The point and polygon data should be <code>sf</code>
+objects.</p>
+<p>The third on the other hand is less clear. In the GTS database, each
+1x1 km grid cell in Norway is assigned a cellindex. This index starts on
+0 for the cell in the north-western corner and numbers cells
+continuously left to right one row at the time. The function
+<code><a href="../reference/gts_create_grid.html">gts_create_grid()</a></code> builds a stars raster with the same
+extent and resolution as the GTS data and cellindices as an attribute.
+Below we create the grid and extract the cellindex for cell numbers 1 to
+5 in the <code>stars</code> raster.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Build raster</span></span>
 <span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gts_create_grid.html">gts_create_grid</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -121,9 +125,9 @@ an attribute.</p>
 <span><span class="co">## Extract the cellindex of the first five cells</span></span>
 <span><span class="va">grid</span><span class="op">$</span><span class="va">cellindex</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="co">#&gt; [1] 0 1 2 3 4</span></span></code></pre></div>
-<p>What you see is that the cellindex starts at 0 and is equal to
-(cellnumber - 1) for the stars raster. This is important to remember
-when we want to plot values on a map.</p>
+<p>What you see is that the cellindex starts at 0 and is equal to (cell
+number - 1) in the raster. This is important to remember if we later
+want to plot values on a map.</p>
 </div>
 <div class="section level2">
 <h2 id="working-with-cellindices">Working with cellindices<a class="anchor" aria-label="anchor" href="#working-with-cellindices"></a>
@@ -132,8 +136,8 @@ when we want to plot values on a map.</p>
 interest, the function <code><a href="../reference/gts_cellindex.html">gts_cellindex()</a></code> is used to extract
 the cellindices for the grid cells which contain a point or which are
 within an area. What you need as input to the function is the geometry,
-point(s) or polygon(s), as sf objects. For points this can be done like
-like this:</p>
+point(s) or polygon(s), as <code>sf</code> objects. For points this can
+be done like like this:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Create a data frame with coordinates</span></span>
 <span><span class="va">coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">58200</span>, <span class="fl">74225</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6708225</span>, <span class="fl">6715025</span><span class="op">)</span><span class="op">)</span></span>
@@ -147,14 +151,40 @@ coordinates or polygons. This is because the latter two requires the API
 to search for cellindices before looking up data.</p>
 </div>
 <div class="section level2">
-<h2 id="coordinate-system-and-transformation">Coordinate system and transformation<a class="anchor" aria-label="anchor" href="#coordinate-system-and-transformation"></a>
+<h2 id="coordinate-system">Coordinate system<a class="anchor" aria-label="anchor" href="#coordinate-system"></a>
 </h2>
-<p>Work in progress…</p>
+<p>The GTS data grid is in the coordinate system (CRS) ETRS89 UTM 33N
+(<a href="https://epsg.io/25833" class="external-link">EPSG: 25833</a>). Hence, any points or
+polygons used as input also needs to use the same CRS. CRS
+transformations are straight forward using the <code>sf</code> package
+and is not covered here.</p>
 </div>
 <div class="section level2">
-<h2 id="finding-variables">Finding variables<a class="anchor" aria-label="anchor" href="#finding-variables"></a>
+<h2 id="finding-parameters">Finding parameters<a class="anchor" aria-label="anchor" href="#finding-parameters"></a>
 </h2>
-<p>Work in progress…</p>
+<p>There are several weather parameters available for download in the
+GTS data. These come in three different time resolutions, 1440, 180 and
+60 minutes. Daily estimates (1440 minutes), 3 hour and 1 hour estimates
+have different temporal availability. Some of the daily parameters go
+all the back to 1957, while the 3 and 1 hour parameters are available
+from 2010 or more recent years. To find parameters and their temporal
+availability use the function <code>gts_parameters</code> to read in a
+table from the API.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## Find the first five parameters</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/gts_parameters.html">gts_parameters</a></span><span class="op">(</span><span class="op">)</span>, <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   Name            Fullname NoDataValue RawUnit HumanReadableUnit</span></span>
+<span><span class="co">#&gt; 1   rr          Døgnnedbør       65535      mm                mm</span></span>
+<span><span class="co">#&gt; 2 rr3d Nedbør siste 3 døgn       65535      mm                mm</span></span>
+<span><span class="co">#&gt; 3 rr1h       Nedbør 1 time       65535      mm                mm</span></span>
+<span><span class="co">#&gt; 4 rr3h      Nedbør 3 timer       65535      mm                mm</span></span>
+<span><span class="co">#&gt; 5  rrl                Regn       65535      mm                mm</span></span>
+<span><span class="co">#&gt;   TimeResolutionInMinutes FirstDateInTimeSerie</span></span>
+<span><span class="co">#&gt; 1                    1440           1957-01-01</span></span>
+<span><span class="co">#&gt; 2                    1440           2010-01-01</span></span>
+<span><span class="co">#&gt; 3                      60           2010-01-01</span></span>
+<span><span class="co">#&gt; 4                     180           2010-01-01</span></span>
+<span><span class="co">#&gt; 5                    1440           1957-01-01</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="download-1-coordinates">Download 1: Coordinates<a class="anchor" aria-label="anchor" href="#download-1-coordinates"></a>
@@ -195,7 +225,7 @@ the server:</p>
 <ul>
 <li>Multiple coordinates for <code>points</code> in the same grid cell.
 <ul>
-<li>The API does no accept queries which ask for the data from the same
+<li>The API do no accept queries which ask for the data from the same
 grid cell multiple times. Find the cellindices using
 <code>gts_cellindex</code> and perform the query with unique cellindices
 using <code>gts_dl_cellindex</code> or
@@ -205,8 +235,10 @@ using <code>gts_dl_cellindex</code> or
 <li>Too large queries.
 <ul>
 <li>The API have a upper limit for the size of data which can be
-returned in each query. Limit the number of cellindices or the length of
-the time series in each query.</li>
+returned in each query. Generally the cap is at around 635’000 values,
+but this number decreases with increasing number of missing values. Run
+the query in chunks to limit the number of cellindices or the length of
+the time series in each query to get around this issue.</li>
 </ul>
 </li>
 <li>Missing data in database.
@@ -218,12 +250,13 @@ in the database.</li>
 <code>gts_parameters</code> to make sure that the query is valid.</li>
 <li>Next, try some shorter time spans to figure out if there are
 particular dates which have missing data.</li>
-<li>Generally the <code>gts_dl_cellindex</code> and
-<code>gts_dl_polygon</code> functions are less likely to return error
-messages for missing data than the <code>gts_dl_cellindex_aggr</code>
-and <code>gts_dl_polygon_aggr</code> functions. The former two functions
-is better to use for troubleshooting for missing data on single
-dates.</li>
+<li>Change to the <code>gts_dl_cellindex</code> and
+<code>gts_dl_polygon</code> functions, which are less likely to return
+error messages for missing data than the
+<code>gts_dl_cellindex_aggr</code> and <code>gts_dl_polygon_aggr</code>
+functions. This is because of the way that the API handles missing data.
+For the former two functions the API return a NoData value, while for
+the latter two the API currently ends with an error.</li>
 </ul>
 </li>
 </ul>

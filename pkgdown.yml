@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   rgts: rgts.html
-last_built: 2024-10-02T07:44Z
+last_built: 2024-10-02T20:14Z
 urls:
   reference: https://thomas-kvalnes.github.io/rgts/reference
   article: https://thomas-kvalnes.github.io/rgts/articles
