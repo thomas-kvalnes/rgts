@@ -16,16 +16,83 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Introduction
+
+rgts is an R package which makes it easier to download the GridTimeSeries (GTS) data available in a 1x1 km grid from NVE. The package use well known R syntax to connect to the data base, downloads data and casts it into easily accessible data.frames. Each row contains the data of a grid cell at a given date and time.
+
+Below is an overview of how to use the package. This brief introduction assumes that you are familiar with working with spatial data in R. We make use of the [sf](https://r-spatial.github.io/sf/index.html) and [stars](https://r-spatial.github.io/stars/index.html) packages. Consult these packages as needed. First we load the `rgts`, `sf` and `stars` packages.
+
 ```{r setup}
 library(rgts)
+library(sf)
+library(stars)
 ```
 
-## Introduction to rgts
+## Types of input
+To download GTS data you will need at least one out of three possible types of spatial data as input to the functions.
 
-rgts is an R package which makes it easy to download data from a 1x1 km gridded database by NVE. The package use well known R syntax to connect to the data base, downloads data and casts it into easily accessible data.frames. Each row contains the data of a grid cell at a given date, time and time resolution.
+* Points with coordinates
+* An area represented as a polygon
+* Cellindices
 
-To be continued...
+The first two supposedly do not require too much explanation, either you download data for one or more points of interest (e.g. the position of an animal) or for one or more areas of interest (e.g. a protected area). The third on the other hand is less clear. The GTS data assignes a cellindex to each 1x1 km grid cell in Norway. This index starts on 0 for the cell in the north-western corner and numbers cells continuously left to right one row at the time. The function `gts_create_grid()` builds a stars raster with cellindices as an attribute.
 
+```{r grid}
+## Build raster
+grid <- gts_create_grid()
+grid
+## Extract the cellindex of the first five cells
+grid$cellindex[1:5]
+```
 
+What you see is that the cellindex starts at 0 and is equal to (cellnumber - 1) for the stars raster. This is important to remember when we want to plot values on a map.
 
+## Working with cellindices
+How do we obtain cellindices then? If you have a point or area of interest, the function `gts_cellindex()` is used to extract the cellindices for the grid cells which contain a point or which are within an area. What you need as input to the function is the geometry, point(s) or polygon(s), as sf objects. For points this can be done like like this:
+
+```{r cellindex}
+## Create a data frame with coordinates
+coords <- data.frame(x = c(58200, 74225), y = c(6708225, 6715025))
+coords <- st_as_sf(x = coords, coords = c("x", "y"), crs = 25833)
+## Extract cellindices
+gts_cellindex(geometry = coords)
+```
+
+These cellindices can later be used to query for GTS data. Generally, performing queries using cellindices as input is faster than using coordinates or polygons. This is because the latter two requires the API to search for cellindices before looking up data.
+
+## Coordinate system and transformation
+Work in progress...
+
+## Finding variables
+Work in progress...
+
+## Download 1: Coordinates
+Work in progress...
+
+## Download 2: Polygons
+Work in progress...
+
+## Download 3: Cellindices
+Work in progress...
+
+## Maps
+Work in progress...
+
+## Troubleshooting
+Sometimes what seems to be a valid query may fail and we need to do some troubleshooting. The download functions, with prefix `gts_dl_...`, have two optional arguments to aid this process. First, you may set `verbose` to `TRUE` to see exactly what is sent to the server. Then you can check that you have provided the input data correctly. Second, you can set `return_raw` to `TRUE` to have the function return the raw result as a `list` from the query. Then check that the output is as expected from the type of data and time span and resolution in the query.
+
+Here is how to handle a few specific recurring issues when using the `gts_dl_...`-functions which results in error messages from the server:
+
+* Multiple coordinates for `points` in the same grid cell.
+  + The API does no accept queries which ask for the data from the same grid cell multiple times. Find the cellindices using `gts_cellindex` and perform the query with unique cellindices using `gts_dl_cellindex` or `gts_dl_cellindex_aggr`.
+* Too large queries.
+  + The API have a upper limit for the size of data which can be returned in each query. Limit the number of cellindices or the length of the time series in each query.
+* Missing data in database.
+  + Sometimes the API returns an error message if the query requests data outside the available time spans for data or there is missing data in the database.
+  + Check the available time spans for data using `gts_parameters` to make sure that the query is valid.
+  + Next, try some shorter time spans to figure out if there are particular dates which have missing data.
+  + Generally the `gts_dl_cellindex` and `gts_dl_polygon` functions are less likely to return error messages for missing data than the `gts_dl_cellindex_aggr` and `gts_dl_polygon_aggr` functions. The former two functions is better to use for troubleshooting for missing data on single dates.
+
+## Getting help
+If you encounter a clear bug, please file a minimal reproducible example on [github](https://github.com/thomas-kvalnes/rgts/issues). Questions about the data needs to be addressed to [NVE](https://www.nve.no/om-nve/kontakt/). General R help can be found in the R Community on [Stack Overflow](https://stackoverflow.com/collectives/r-language). E-mail the maintainer for urgent or private communications.
 
