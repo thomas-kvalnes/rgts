@@ -1,9 +1,9 @@
 #' Download cellwise values for polygon
 #' @md
-#' @description Downloads data for each grid cell within a polygon (coordinate system: (EPSG: 25833)). Time resolution is given by the choice of environmental variable (env_layer) and start_date/end_date. E.g. "tm3h" for "2023-12-01T06" is three hour data for temperature collected at 06:00 and "tm" for "2023-12-01" is the daily average temperature.\cr \cr
-#' \emph{Note: The API has a cap at ~635'000 values in each download and ends with an error for larger queries.}
+#' @description Downloads data for each grid cell within a polygon (coordinate system: (EPSG: 25833)). Time resolution is given by the choice of parameter and start_date/end_date. E.g. "tm3h" for "2023-12-01T06" is three hour data for temperature collected at 06:00 and "tm" for "2023-12-01" is the daily average temperature.\cr \cr
+#' \emph{Note: The API has a cap at ~635'000 values in each download (lower if many missing values) and ends with an error for larger queries.}
 #' @param polygon A polygon as json rings with spatialReference. Use [sf_to_json()] to convert from sf til json. Should be in coordinate system EPSG:25833.
-#' @param   env_layer The quoted abbreviation for the environmental layer to download. E.g. Daily precipitaion = "rr", Temperature =  "tm", Snow depth =  "sd".
+#' @param parameter The quoted abbreviation for the parameter to download. E.g. Daily precipitaion = "rr", Temperature =  "tm", Snow depth =  "sd".
 #' @param start_date The start date given as: 'YYYY-MM-DD'. If querying three or one hour data, the hour should be given like this: format: 'YYYY-MM-DDT06'
 #' @param end_date The end date. See start_date.
 #' @param return_raw Set to TRUE to return the raw results from the query (a list) without coercing to a data.frame.
@@ -18,17 +18,17 @@
 #' pol <- st_as_sf(st_as_sfc(st_bbox(pol)))
 #' pol <- gts_sf2json(pol)
 #' ## Download data
-#' head(gts_dl_polygon(polygon = pol, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01"))
-#' head(gts_dl_polygon(polygon = pol, env_layer = "tm1h", start_date = "2023-12-01T00", end_date = "2023-12-01T01"))
+#' head(gts_dl_polygon(polygon = pol, parameter = "tm", start_date = "2023-12-01", end_date = "2023-12-01"))
+#' head(gts_dl_polygon(polygon = pol, parameter = "tm1h", start_date = "2023-12-01T00", end_date = "2023-12-01T01"))
 #' @export
-gts_dl_polygon <- function(polygon, env_layer, start_date, end_date, return_raw = FALSE, verbose = FALSE){
+gts_dl_polygon <- function(polygon, parameter, start_date, end_date, return_raw = FALSE, verbose = FALSE){
 
   # URL to download API
   url_api <- "http://gts.nve.no/api/AreaTimeSeries/ByGeoJson"
 
   # Make request
   req <- request(url_api) |>
-    req_body_json(list(Theme = env_layer, StartDate = start_date, EndDate = end_date, Format = "json", Rings = polygon))
+    req_body_json(list(Theme = parameter, StartDate = start_date, EndDate = end_date, Format = "json", Rings = polygon))
 
   # Dry run
   if(verbose)

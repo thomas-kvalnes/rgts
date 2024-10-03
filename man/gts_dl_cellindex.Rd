@@ -6,7 +6,7 @@
 \usage{
 gts_dl_cellindex(
   cellindex,
-  env_layer,
+  parameter,
   start_date,
   end_date,
   return_raw = FALSE,
@@ -16,7 +16,7 @@ gts_dl_cellindex(
 \arguments{
 \item{cellindex}{A vector with cellindices for which GTS data should be downloaded.}
 
-\item{env_layer}{The quoted abbreviation for the environmental layer to download. E.g. Daily precipitaion = "rr", Temperature =  "tm", Snow depth =  "sd".}
+\item{parameter}{The quoted abbreviation for the parameter to download. E.g. Daily precipitaion = "rr", Temperature =  "tm", Snow depth =  "sd".}
 
 \item{start_date}{The start date given as: 'YYYY-MM-DD'. If querying three or one hour data, the hour should be given like this: format: 'YYYY-MM-DDT06'}
 
@@ -30,8 +30,8 @@ gts_dl_cellindex(
 A data frame with the GTS data associated with each grid cell for each step in the time resolution, e.g. daily values or values for each hour.
 }
 \description{
-Downloads data for each grid cell identified by their CellIndex (the index for grid cells in GridTimeSeries (GTS) data fra NVE). For the same area, this is faster than \code{\link[=gts_dl_polygon]{gts_dl_polygon()}}, as the latter first looks up the cellindices for the polygon. Time resolution is given by the choice of environmental variable (env_layer) and start_date/end_date. E.g. "tm3h" for "2023-12-01T06" is three hour data for temperature collected at 06:00 and "tm" for "2023-12-01" is the daily average temperature.\cr \cr
-\emph{Note: The API has a cap at ~635'000 values in each download and ends with an error for larger queries.}
+Downloads data for each grid cell identified by their CellIndex (the index for grid cells in GridTimeSeries (GTS) data fra NVE). For the same area, this is faster than \code{\link[=gts_dl_polygon]{gts_dl_polygon()}}, as the latter first looks up the cellindices for the polygon. Time resolution is given by the choice of parameter and start_date/end_date. E.g. "tm3h" for "2023-12-01T06" is three hour data for temperature collected at 06:00 and "tm" for "2023-12-01" is the daily average temperature.\cr \cr
+\emph{Note: The API has a cap at ~635'000 values in each download (lower if many missing values) and ends with an error for larger queries.}
 }
 \examples{
 ## Create a sf polygon and convert to json
@@ -43,8 +43,8 @@ pol <- st_as_sf(st_as_sfc(st_bbox(pol)))
 ## Look up cellindices
 cells <- gts_cellindex(geometry = pol)
 ## Download data
-head(gts_dl_cellindex(cellindex = cells, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01"))
-head(gts_dl_cellindex(cellindex = cells, env_layer = "tm3h", start_date = "2023-12-01T06", end_date = "2023-12-01T09"))
+head(gts_dl_cellindex(cellindex = cells, parameter = "tm", start_date = "2023-12-01", end_date = "2023-12-01"))
+head(gts_dl_cellindex(cellindex = cells, parameter = "tm3h", start_date = "2023-12-01T06", end_date = "2023-12-01T09"))
 }
 \seealso{
 \code{\link[=gts_cellindex]{gts_cellindex()}} to find the cellindices for points or all raster cells in a polygon.

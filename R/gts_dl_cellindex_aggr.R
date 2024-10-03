@@ -1,10 +1,10 @@
 #' Download aggregated values for CellIndex
 #' @md
-#' @description Downloads and returns data aggregated for the chosen time resolution over grid cells identified by their CellIndex. For the same area, this is faster than [gts_dl_polygon_aggr()], as the latter first looks up the cellindices for the polygon. Available methods for aggregating are sum, min, max, avg and median. Time resolution is given by the choice of environmental variable (env_layer) and start_date/end_date. E.g. "tm3h" for "2023-12-01T06" is three hour data for temperature collected at 06:00 and "tm" for "2023-12-01" is the daily average temperature.\cr \cr
-#' \emph{Note: The API has a cap at ~635'000 values in each download and ends with an error for larger queries.}\cr \cr
+#' @description Downloads and returns data aggregated for the chosen time resolution over grid cells identified by their CellIndex. For the same area, this is faster than [gts_dl_polygon_aggr()], as the latter first looks up the cellindices for the polygon. Available methods for aggregating are sum, min, max, avg and median. Time resolution is given by the choice of parameter and start_date/end_date. E.g. "tm3h" for "2023-12-01T06" is three hour data for temperature collected at 06:00 and "tm" for "2023-12-01" is the daily average temperature.\cr \cr
+#' \emph{Note: The API has a cap at ~635'000 values in each download (lower if many missing values) and ends with an error for larger queries.}\cr \cr
 #' \emph{Warning: This function is very slow for 1 and 3 hour time steps as the API requires one request per time step when not requesting daily time steps.}
 #' @param cellindex A vector with cellindices for which GTS data should be downloaded.
-#' @param env_layer The quoted abbreviation for the environmental layer to download. E.g. Daily precipitaion = "rr", Temperature =  "tm", Snow depth =  "sd".
+#' @param parameter The quoted abbreviation for the parameter to download. E.g. Daily precipitaion = "rr", Temperature =  "tm", Snow depth =  "sd".
 #' @param start_date The start date given as: 'YYYY-MM-DD'. If querying three or one hour data, the hour should be given like this: format: 'YYYY-MM-DDT06'
 #' @param end_date The end date. See start_date.
 #' @param method The method for aggregating values ("sum", "min", "max", "avg" or "median")
@@ -23,17 +23,17 @@
 #' ## Look up cellindices
 #' cells <- gts_cellindex(geometry = pol)
 #' ## Download data
-#' gts_dl_cellindex_aggr(cellindex = cells, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-03", method = "avg")
-#' gts_dl_cellindex_aggr(cellindex = cells, env_layer = "tm1h", start_date = "2023-12-01T06", end_date = "2023-12-01T12", method = "avg")
-#' gts_dl_cellindex_aggr(cellindex = cells, env_layer = "tm3h", start_date = "2023-12-01T06", end_date = "2023-12-01T12", method = "avg")
+#' gts_dl_cellindex_aggr(cellindex = cells, parameter = "tm", start_date = "2023-12-01", end_date = "2023-12-03", method = "avg")
+#' gts_dl_cellindex_aggr(cellindex = cells, parameter = "tm1h", start_date = "2023-12-01T06", end_date = "2023-12-01T12", method = "avg")
+#' gts_dl_cellindex_aggr(cellindex = cells, parameter = "tm3h", start_date = "2023-12-01T06", end_date = "2023-12-01T12", method = "avg")
 #' @export
-gts_dl_cellindex_aggr <- function(cellindex, env_layer, start_date, end_date, method, return_raw = FALSE, verbose = FALSE){
+gts_dl_cellindex_aggr <- function(cellindex, parameter, start_date, end_date, method, return_raw = FALSE, verbose = FALSE){
 
   # URL to download API
   url_api <- "http://gts.nve.no/api/AggregationTimeSeries/ByCellIndexCsv"
 
-  # Find time resolution for env_layer
-  timeres <- filter(gts_parameters(), .data$Name == env_layer)$TimeResolutionInMinutes
+  # Find time resolution for parameter
+  timeres <- filter(gts_parameters(), .data$Name == parameter)$TimeResolutionInMinutes
 
   # Select step size for sequence of date and time
   datetime_steps <- switch(as.character(timeres),
@@ -49,7 +49,7 @@ gts_dl_cellindex_aggr <- function(cellindex, env_layer, start_date, end_date, me
 
     # Make request
     req <- request(url_api) |>
-      req_body_json(list(Theme = env_layer, StartDate = start_date, EndDate = end_date, Format = "json", Method = method, CellIndexCsv = cellindex))
+      req_body_json(list(Theme = parameter, StartDate = start_date, EndDate = end_date, Format = "json", Method = method, CellIndexCsv = cellindex))
 
     # Dry run
     if(verbose)
@@ -92,7 +92,7 @@ gts_dl_cellindex_aggr <- function(cellindex, env_layer, start_date, end_date, me
 
     # Make request - first time step
     req <- request(url_api) |>
-      req_body_json(list(Theme = env_layer, StartDate = start_date, EndDate = start_date, Format = "json", Method = method, CellIndexCsv = cellindex))
+      req_body_json(list(Theme = parameter, StartDate = start_date, EndDate = start_date, Format = "json", Method = method, CellIndexCsv = cellindex))
 
     # Dry run - first time step
     if(verbose)
@@ -129,7 +129,7 @@ gts_dl_cellindex_aggr <- function(cellindex, env_layer, start_date, end_date, me
 
         # Make request
         req <- request(url_api) |>
-          req_body_json(list(Theme = env_layer, StartDate = start_i, EndDate = end_i, Format = "json", Method = method, CellIndexCsv = cellindex))
+          req_body_json(list(Theme = parameter, StartDate = start_i, EndDate = end_i, Format = "json", Method = method, CellIndexCsv = cellindex))
 
         # Dry run
         if(verbose)

@@ -1,9 +1,9 @@
 #' Download cellwise values for CellIndex
 #' @md
-#' @description Downloads data for each grid cell identified by their CellIndex (the index for grid cells in GridTimeSeries (GTS) data fra NVE). For the same area, this is faster than [gts_dl_polygon()], as the latter first looks up the cellindices for the polygon. Time resolution is given by the choice of environmental variable (env_layer) and start_date/end_date. E.g. "tm3h" for "2023-12-01T06" is three hour data for temperature collected at 06:00 and "tm" for "2023-12-01" is the daily average temperature.\cr \cr
-#' \emph{Note: The API has a cap at ~635'000 values in each download and ends with an error for larger queries.}
+#' @description Downloads data for each grid cell identified by their CellIndex (the index for grid cells in GridTimeSeries (GTS) data fra NVE). For the same area, this is faster than [gts_dl_polygon()], as the latter first looks up the cellindices for the polygon. Time resolution is given by the choice of parameter and start_date/end_date. E.g. "tm3h" for "2023-12-01T06" is three hour data for temperature collected at 06:00 and "tm" for "2023-12-01" is the daily average temperature.\cr \cr
+#' \emph{Note: The API has a cap at ~635'000 values in each download (lower if many missing values) and ends with an error for larger queries.}
 #' @param cellindex A vector with cellindices for which GTS data should be downloaded.
-#' @param env_layer The quoted abbreviation for the environmental layer to download. E.g. Daily precipitaion = "rr", Temperature =  "tm", Snow depth =  "sd".
+#' @param parameter The quoted abbreviation for the parameter to download. E.g. Daily precipitaion = "rr", Temperature =  "tm", Snow depth =  "sd".
 #' @param start_date The start date given as: 'YYYY-MM-DD'. If querying three or one hour data, the hour should be given like this: format: 'YYYY-MM-DDT06'
 #' @param end_date The end date. See start_date.
 #' @param return_raw Set to TRUE to return the raw results from the query (a list) without coercing to a data.frame.
@@ -20,10 +20,10 @@
 #' ## Look up cellindices
 #' cells <- gts_cellindex(geometry = pol)
 #' ## Download data
-#' head(gts_dl_cellindex(cellindex = cells, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-01"))
-#' head(gts_dl_cellindex(cellindex = cells, env_layer = "tm3h", start_date = "2023-12-01T06", end_date = "2023-12-01T09"))
+#' head(gts_dl_cellindex(cellindex = cells, parameter = "tm", start_date = "2023-12-01", end_date = "2023-12-01"))
+#' head(gts_dl_cellindex(cellindex = cells, parameter = "tm3h", start_date = "2023-12-01T06", end_date = "2023-12-01T09"))
 #' @export
-gts_dl_cellindex <- function(cellindex, env_layer, start_date, end_date, return_raw = FALSE, verbose = FALSE){
+gts_dl_cellindex <- function(cellindex, parameter, start_date, end_date, return_raw = FALSE, verbose = FALSE){
 
   # URL to download API
   url_api <- "http://gts.nve.no/api/AreaTimeSeries/ByCellIndexCsv"
@@ -33,7 +33,7 @@ gts_dl_cellindex <- function(cellindex, env_layer, start_date, end_date, return_
 
   # Make request
   req <- request(url_api) |>
-    req_body_json(list(Theme = env_layer, StartDate = start_date, EndDate = end_date, Format = "json", CellIndexCsv = cellindex))
+    req_body_json(list(Theme = parameter, StartDate = start_date, EndDate = end_date, Format = "json", CellIndexCsv = cellindex))
 
   # Dry run
   if(verbose)

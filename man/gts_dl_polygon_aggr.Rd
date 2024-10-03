@@ -6,7 +6,7 @@
 \usage{
 gts_dl_polygon_aggr(
   polygon,
-  env_layer,
+  parameter,
   start_date,
   end_date,
   method,
@@ -17,7 +17,7 @@ gts_dl_polygon_aggr(
 \arguments{
 \item{polygon}{A polygon as json rings with spatialReference. Use \code{\link[=sf_to_json]{sf_to_json()}} to convert from sf til json. Should be in coordinate system EPSG:25833.}
 
-\item{env_layer}{The quoted abbreviation for the environmental layer to download. E.g. Daily precipitaion = "rr", Temperature =  "tm", Snow depth =  "sd".}
+\item{parameter}{The quoted abbreviation for the parameter to download. E.g. Daily precipitaion = "rr", Temperature =  "tm", Snow depth =  "sd".}
 
 \item{start_date}{The start date given as: 'YYYY-MM-DD'. If querying three or one hour data, the hour should be given like this: format: 'YYYY-MM-DDT06'}
 
@@ -33,8 +33,8 @@ gts_dl_polygon_aggr(
 A data frame with the GTS data aggregated across grid cells in the polygon for each step in the time resolution, e.g. daily values or values for each hour.
 }
 \description{
-Downloads and returns data aggregated for the chosen time resolution over grid cells within a polygon (coordinate system: (EPSG: 25833)). Available methods for aggregating are sum, min, max, avg and median. Time resolution is given by the choice of environmental variable (env_layer) and start_date/end_date. E.g. "tm3h" for "2023-12-01T06" is three hour data for temperature collected at 06:00 and "tm" for "2023-12-01" is the daily average temperature. collected at 06:00.\cr \cr
-\emph{Note: The API has a cap at ~635'000 values in each download and ends with an error for larger queries.}\cr \cr
+Downloads and returns data aggregated for the chosen time resolution over grid cells within a polygon (coordinate system: (EPSG: 25833)). Available methods for aggregating are sum, min, max, avg and median. Time resolution is given by the choice of parameter and start_date/end_date. E.g. "tm3h" for "2023-12-01T06" is three hour data for temperature collected at 06:00 and "tm" for "2023-12-01" is the daily average temperature. collected at 06:00.\cr \cr
+\emph{Note: The API has a cap at ~635'000 values in each download (lower if many missing values) and ends with an error for larger queries.}\cr \cr
 \emph{Warning: This function is extremely slow for 1 and 3 hour time steps as the API requires one request per time step when not requesting daily time steps.}
 }
 \examples{
@@ -46,9 +46,9 @@ pol <- st_as_sf(x = data.frame(x = xx, y = yy), coords = c("x", "y"), crs = 2583
 pol <- st_as_sf(st_as_sfc(st_bbox(pol)))
 pol <- gts_sf2json(pol)
 ## Download data
-gts_dl_polygon_aggr(polygon = pol, env_layer = "tm", start_date = "2023-12-01", end_date = "2023-12-04", method = "avg")
-gts_dl_polygon_aggr(polygon = pol, env_layer = "tm1h", start_date = "2023-12-01T06", end_date = "2023-12-01T12", method = "avg")
-gts_dl_polygon_aggr(polygon = pol, env_layer = "tm3h", start_date = "2023-12-01T06", end_date = "2023-12-01T12", method = "avg")
+gts_dl_polygon_aggr(polygon = pol, parameter = "tm", start_date = "2023-12-01", end_date = "2023-12-04", method = "avg")
+gts_dl_polygon_aggr(polygon = pol, parameter = "tm1h", start_date = "2023-12-01T06", end_date = "2023-12-01T12", method = "avg")
+gts_dl_polygon_aggr(polygon = pol, parameter = "tm3h", start_date = "2023-12-01T06", end_date = "2023-12-01T12", method = "avg")
 }
 \seealso{
 \code{\link[=gts_dl_polygon]{gts_dl_polygon()}} to download cellwise GTS data for polygon.

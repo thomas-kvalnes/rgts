@@ -37,7 +37,7 @@ To download GTS data you will need one out of three possible types of spatial da
 
 The first two supposedly do not require too much explanation, either you download data for one or more points of interest (e.g. the position of an animal) or for one or more areas of interest (e.g. the outline of a protected area). The point and polygon data should be `sf` objects.
 
-The third on the other hand is less clear. In the GTS database, each 1x1 km grid cell in Norway is assigned a cellindex. This index starts on 0 for the cell in the north-western corner and numbers cells continuously left to right one row at the time. The function `gts_create_grid()` builds a stars raster with the same extent and resolution as the GTS data and cellindices as an attribute. Below we create the grid and extract the cellindex for cell numbers 1 to 5 in the `stars` raster.
+The third on the other hand is less clear. In the GTS database, each 1x1 km grid cell in Norway is assigned a unique ID, called cellindex. This index starts on 0 for the cell in the north-western corner and numbers cells continuously left to right one row at the time. The function `gts_create_grid()` builds a stars raster with the same extent and resolution as the GTS data and cellindices as an attribute. Below we create the grid and extract the cellindex for cell numbers 1 to 5 in the `stars` raster.
 
 ```{r grid}
 ## Build raster
@@ -50,7 +50,7 @@ grid$cellindex[1:5]
 What you see is that the cellindex starts at 0 and is equal to (cell number - 1) in the raster. This is important to remember if we later want to plot values on a map.
 
 ## Working with cellindices
-How do we obtain cellindices then? If you have a point or area of interest, the function `gts_cellindex()` is used to extract the cellindices for the grid cells which contain a point or which are within an area. What you need as input to the function is the geometry, point(s) or polygon(s), as `sf` objects. For points this can be done like like this:
+How do we obtain cellindices then? If you have a point or area of interest, the function `gts_cellindex()` is used to extract the cellindices for the grid cells which contain a point or which are within an area. What you need as input to the function is the geometry, point(s) or polygon(s), as `sf` objects. The approach for polygons and points are the same. For points this can be done like like this:
 
 ```{r cellindex}
 ## Create a data frame with coordinates
@@ -76,13 +76,61 @@ head(gts_parameters(), 5)
 
 
 ## Download 1: Coordinates
-Work in progress...
+For a set of points of interest, data for grid cells which contain these points can be downloaded.
+
+```{r points}
+## Create a data frame with coordinates
+coords <- data.frame(x = c(58200, 74225), y = c(6708225, 6715025))
+## Download data
+gts_dl_coords(coords = coords, parameter = "tm", start_date = "2023-12-01", end_date = "2023-12-02")
+
+```
+
+The output is a data frame where the coordinates we supplied are returned, as well as the corresponding cellindex and the average altitude in the grid cell. The data for these grid cells are given for the specified dates, time and time resolution. Units provide the units of measurement and the column `tm` contains the data for the parameter of interest. The last column is always named by the abbreviated parameter name in the query.
 
 ## Download 2: Polygons
-Work in progress...
+Lets create a polygon, which covers an area of interest at Hardangervidda in Norway.
+
+```{r poly}
+## Create a sf polygon
+library(sf)
+xx <- c(58200, 74225, 58200, 74226)
+yy <- c(6708225, 6708225, 6715025, 6715025)
+points <- st_as_sf(x = data.frame(x = xx, y = yy), coords = c("x", "y"), crs = 25833)
+pol <- st_as_sf(st_as_sfc(st_bbox(points)))
+```
+
+We can now take this polygon and download daily temperature data ("tm") for all grid cells within the polygon. First we need to convert the polygon to json using the function `sf_to_json`. We only show the first 10 lines of data.
+
+```{r download poly}
+## Convert to json
+pol_json <- gts_sf2json(pol)
+## Download data
+head(gts_dl_polygon(polygon = pol_json, parameter = "tm", start_date = "2023-12-01", end_date = "2023-12-01"), 10)
+```
 
 ## Download 3: Cellindices
-Work in progress...
+It is faster to query the API using cellindices directly instead of going the way around with polygons. First, the cellindices for a given polygon is obtained by
+
+```{r cellindex poly}
+cells <- gts_cellindex(geometry = pol)
+```
+
+Then the daily temperature data can be downloaded using the `gts_dl_cellindex`-function. Again we only show the first 10 lines of data.
+
+```{r download cellindex}
+## Download data
+head(gts_dl_cellindex(cellindex = cells, parameter = "tm", start_date = "2023-12-01", end_date = "2023-12-01"), 10)
+```
+
+We can also obtain data aggregated across grid cells. We then need to choose a method for aggregating data, "sum", "min", "max", "avg" or "median". Choosing "avg" we can obtain daily averages by
+
+```{r download cellindex aggr}
+## Download data
+gts_dl_cellindex_aggr(cellindex = cells, parameter = "tm", start_date = "2023-12-01", end_date = "2023-12-10", method = "avg")
+```
+
+It is also possible to use `gts_dl_polygon_aggr`-function to downloading aggregated data using polygons directly, but remember to convert the polygon to json first. As mentioned, the polygon functions are a bit slower, so use the cellindex-functions when speed is important.
 
 ## Maps
 Work in progress...
