@@ -63,12 +63,12 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>The goal of rgts is to provide convenient methods for accessing and downloading the GridTimeSeries (GTS) data for Norway (api.nve.no/doc/gridtimeseries-data-gts/) from the Norwegian Water Resources and Energy Directorate (NVE). This data reposiory contains 1x1 km gridded time series data for Norway and includes several weather and environmental parameters, such as temperature, precipitation, wind direction and strength and snow depth. Data is available at 1h, 3h and daily intervals depending on the variable of interest. Many of the daily variables go back from present to 1957. Questions about the data should be directed to NVE, the author only maintains the rgts-package which access the data.</p>
+<p>The goal of <code>rgts</code> is to provide convenient methods for accessing and downloading the GridTimeSeries (GTS) data for Norway (api.nve.no/doc/gridtimeseries-data-gts/) from the Norwegian Water Resources and Energy Directorate (NVE). This data repository contains 1x1 km grid time series data for Norway and includes several weather and environmental parameters, such as temperature, precipitation, wind direction and strength and snow depth. Data is available at 1h, 3h and daily intervals depending on the variable of interest. Many of the daily variables go back from present to 1957.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of rgts from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>You can install the development version of <code>rgts</code> from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"thomas-kvalnes/rgts"</span><span class="op">)</span></span></code></pre></div>
@@ -78,7 +78,7 @@
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomas-kvalnes/rgts" class="external-link">rgts</a></span><span class="op">)</span></span></code></pre></div>
-<p>The variables available in the GridTimeSeries (GTS) data can be listed using gts_parameters(). Here we show the first five:</p>
+<p>The variables available in the GridTimeSeries (GTS) data can be listed using the <code>gts_parameters</code>-function. Here we show the first five:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="reference/gts_parameters.html">gts_parameters</a></span><span class="op">(</span><span class="op">)</span>, <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   Name            Fullname NoDataValue RawUnit HumanReadableUnit</span></span>
@@ -93,12 +93,12 @@
 <span><span class="co">#&gt; 3                      60           2010-01-01</span></span>
 <span><span class="co">#&gt; 4                     180           2010-01-01</span></span>
 <span><span class="co">#&gt; 5                    1440           1957-01-01</span></span></code></pre></div>
-<p>If we have some points of interest we can download data for the points in grid cells using:</p>
+<p>The <code>Name</code> column contain the parameter names which is used to specify which data layer to download. Downloading GTS data is made simple by a set of functions with prefix <code>gts_dl_...</code>. We can download data for points of interest with <code>gts_dl_points</code>, and for areas of interest with <code>gts_dl_polygon</code> or <code>gts_dl_polygon_aggr</code>. The first returns values for each grid cell within the polygon, while the latter returns aggregated values across the grid cells within the polygon. Faster downloads for areas or points can be done with the <code>gts_dl_cellindex</code> and <code>gts_dl_cellindex_aggr</code>-functions, if the cellindex for each grid cell of interest is known or identified using the <code>gts_cellindex</code>-function. See the ‘Get started’ tab for more details on using all of these functions. As a brief first demonstration, data for grid cells which contain some points of interest can be downloaded using:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Create a data frame with coordinates</span></span>
 <span><span class="va">coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">58200</span>, <span class="fl">74225</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6708225</span>, <span class="fl">6715025</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## Download data</span></span>
-<span><span class="fu"><a href="reference/gts_dl_coords.html">gts_dl_coords</a></span><span class="op">(</span>coords <span class="op">=</span> <span class="va">coords</span>, env_layer <span class="op">=</span> <span class="st">"tm"</span>, start_date <span class="op">=</span> <span class="st">"2023-12-01"</span>, end_date <span class="op">=</span> <span class="st">"2023-12-02"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/gts_dl_coords.html">gts_dl_coords</a></span><span class="op">(</span>coords <span class="op">=</span> <span class="va">coords</span>, parameter <span class="op">=</span> <span class="st">"tm"</span>, start_date <span class="op">=</span> <span class="st">"2023-12-01"</span>, end_date <span class="op">=</span> <span class="st">"2023-12-02"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       x       y cellindex altitude       date  time time_resolution_minutes</span></span>
 <span><span class="co">#&gt; 1 58200 6708225   1542878     1294 2023-12-01 00:00                    1440</span></span>
 <span><span class="co">#&gt; 2 58200 6708225   1542878     1294 2023-12-02 00:00                    1440</span></span>
@@ -109,79 +109,12 @@
 <span><span class="co">#&gt; 2 Celcius -13.0</span></span>
 <span><span class="co">#&gt; 3 Celcius -15.2</span></span>
 <span><span class="co">#&gt; 4 Celcius -14.1</span></span></code></pre></div>
-<p>Lets create a polygon, which we imagine covers an area of interest at Hardangervidda in Norway.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Create a sf polygon</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE</span></span>
-<span><span class="va">xx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">58200</span>, <span class="fl">74225</span>, <span class="fl">58200</span>, <span class="fl">74226</span><span class="op">)</span></span>
-<span><span class="va">yy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6708225</span>, <span class="fl">6708225</span>, <span class="fl">6715025</span>, <span class="fl">6715025</span><span class="op">)</span></span>
-<span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">xx</span>, y <span class="op">=</span> <span class="va">yy</span><span class="op">)</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">25833</span><span class="op">)</span></span>
-<span><span class="va">pol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sfc.html" class="external-link">st_as_sfc</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">points</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>We can now take this polygon and download daily temperature data (“tm”) for all grid cells within the polygon. First we need to convert the polygon to json using the function sf_to_json(). We only show the first 10 lines of data.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Convert to json</span></span>
-<span><span class="va">pol_json</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gts_sf2json.html">gts_sf2json</a></span><span class="op">(</span><span class="va">pol</span><span class="op">)</span></span>
-<span><span class="co">## Download data</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="reference/gts_dl_polygon.html">gts_dl_polygon</a></span><span class="op">(</span>polygon <span class="op">=</span> <span class="va">pol_json</span>, env_layer <span class="op">=</span> <span class="st">"tm"</span>, start_date <span class="op">=</span> <span class="st">"2023-12-01"</span>, end_date <span class="op">=</span> <span class="st">"2023-12-01"</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    cellindex altitude       date  time time_resolution_minutes    unit    tm</span></span>
-<span><span class="co">#&gt; 1    1535708     1245 2023-12-01 00:00                    1440 Celcius -12.9</span></span>
-<span><span class="co">#&gt; 2    1535709     1314 2023-12-01 00:00                    1440 Celcius -13.5</span></span>
-<span><span class="co">#&gt; 3    1535710     1177 2023-12-01 00:00                    1440 Celcius -12.5</span></span>
-<span><span class="co">#&gt; 4    1535711     1083 2023-12-01 00:00                    1440 Celcius -11.9</span></span>
-<span><span class="co">#&gt; 5    1535712     1096 2023-12-01 00:00                    1440 Celcius -12.1</span></span>
-<span><span class="co">#&gt; 6    1535713     1100 2023-12-01 00:00                    1440 Celcius -12.1</span></span>
-<span><span class="co">#&gt; 7    1535714     1136 2023-12-01 00:00                    1440 Celcius -12.4</span></span>
-<span><span class="co">#&gt; 8    1535715      975 2023-12-01 00:00                    1440 Celcius -11.6</span></span>
-<span><span class="co">#&gt; 9    1535716     1009 2023-12-01 00:00                    1440 Celcius -11.8</span></span>
-<span><span class="co">#&gt; 10   1535717      961 2023-12-01 00:00                    1440 Celcius -11.6</span></span></code></pre></div>
-<p>Each 1x1 km grid cell have a unique ID, called cellindex. It is faster to query the API using cellindices directly instead of going the way around with polygons. The cellindices for a given polygon can be obtained by</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gts_cellindex.html">gts_cellindex</a></span><span class="op">(</span>geometry <span class="op">=</span> <span class="va">pol</span><span class="op">)</span></span>
-<span><span class="va">cells</span></span>
-<span><span class="co">#&gt;   [1] 1535708 1535709 1535710 1535711 1535712 1535713 1535714 1535715 1535716</span></span>
-<span><span class="co">#&gt;  [10] 1535717 1535718 1535719 1535720 1535721 1535722 1535723 1536903 1536904</span></span>
-<span><span class="co">#&gt;  [19] 1536905 1536906 1536907 1536908 1536909 1536910 1536911 1536912 1536913</span></span>
-<span><span class="co">#&gt;  [28] 1536914 1536915 1536916 1536917 1536918 1538098 1538099 1538100 1538101</span></span>
-<span><span class="co">#&gt;  [37] 1538102 1538103 1538104 1538105 1538106 1538107 1538108 1538109 1538110</span></span>
-<span><span class="co">#&gt;  [46] 1538111 1538112 1538113 1539293 1539294 1539295 1539296 1539297 1539298</span></span>
-<span><span class="co">#&gt;  [55] 1539299 1539300 1539301 1539302 1539303 1539304 1539305 1539306 1539307</span></span>
-<span><span class="co">#&gt;  [64] 1539308 1540488 1540489 1540490 1540491 1540492 1540493 1540494 1540495</span></span>
-<span><span class="co">#&gt;  [73] 1540496 1540497 1540498 1540499 1540500 1540501 1540502 1540503 1541683</span></span>
-<span><span class="co">#&gt;  [82] 1541684 1541685 1541686 1541687 1541688 1541689 1541690 1541691 1541692</span></span>
-<span><span class="co">#&gt;  [91] 1541693 1541694 1541695 1541696 1541697 1541698 1542878 1542879 1542880</span></span>
-<span><span class="co">#&gt; [100] 1542881 1542882 1542883 1542884 1542885 1542886 1542887 1542888 1542889</span></span>
-<span><span class="co">#&gt; [109] 1542890 1542891 1542892 1542893</span></span></code></pre></div>
-<p>Then the daily temperature data can be obtained. Again we only show the first 10 lines of data.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Download data</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="reference/gts_dl_cellindex.html">gts_dl_cellindex</a></span><span class="op">(</span>cellindex <span class="op">=</span> <span class="va">cells</span>, env_layer <span class="op">=</span> <span class="st">"tm"</span>, start_date <span class="op">=</span> <span class="st">"2023-12-01"</span>, end_date <span class="op">=</span> <span class="st">"2023-12-01"</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    cellindex altitude       date  time time_resolution_minutes    unit    tm</span></span>
-<span><span class="co">#&gt; 1    1535708     1245 2023-12-01 00:00                    1440 Celcius -12.9</span></span>
-<span><span class="co">#&gt; 2    1535709     1314 2023-12-01 00:00                    1440 Celcius -13.5</span></span>
-<span><span class="co">#&gt; 3    1535710     1177 2023-12-01 00:00                    1440 Celcius -12.5</span></span>
-<span><span class="co">#&gt; 4    1535711     1083 2023-12-01 00:00                    1440 Celcius -11.9</span></span>
-<span><span class="co">#&gt; 5    1535712     1096 2023-12-01 00:00                    1440 Celcius -12.1</span></span>
-<span><span class="co">#&gt; 6    1535713     1100 2023-12-01 00:00                    1440 Celcius -12.1</span></span>
-<span><span class="co">#&gt; 7    1535714     1136 2023-12-01 00:00                    1440 Celcius -12.4</span></span>
-<span><span class="co">#&gt; 8    1535715      975 2023-12-01 00:00                    1440 Celcius -11.6</span></span>
-<span><span class="co">#&gt; 9    1535716     1009 2023-12-01 00:00                    1440 Celcius -11.8</span></span>
-<span><span class="co">#&gt; 10   1535717      961 2023-12-01 00:00                    1440 Celcius -11.6</span></span></code></pre></div>
-<p>We can also obtain data aggregated across grid cells. We then need to choose a method for aggregating data, “sum”, “min”, “max”, “avg” or “median”. Choosing “avg” we can obtain daily averages by:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Download data</span></span>
-<span><span class="fu"><a href="reference/gts_dl_cellindex_aggr.html">gts_dl_cellindex_aggr</a></span><span class="op">(</span>cellindex <span class="op">=</span> <span class="va">cells</span>, env_layer <span class="op">=</span> <span class="st">"tm"</span>, start_date <span class="op">=</span> <span class="st">"2023-12-01"</span>, end_date <span class="op">=</span> <span class="st">"2023-12-10"</span>, method <span class="op">=</span> <span class="st">"avg"</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          date  time time_resolution_minutes    unit     tm_avg</span></span>
-<span><span class="co">#&gt; 1  2023-12-01 00:00                    1440 Celcius -13.075893</span></span>
-<span><span class="co">#&gt; 2  2023-12-02 00:00                    1440 Celcius -12.500893</span></span>
-<span><span class="co">#&gt; 3  2023-12-03 00:00                    1440 Celcius -11.951786</span></span>
-<span><span class="co">#&gt; 4  2023-12-04 00:00                    1440 Celcius -12.035714</span></span>
-<span><span class="co">#&gt; 5  2023-12-05 00:00                    1440 Celcius -14.912500</span></span>
-<span><span class="co">#&gt; 6  2023-12-06 00:00                    1440 Celcius -13.713393</span></span>
-<span><span class="co">#&gt; 7  2023-12-07 00:00                    1440 Celcius  -9.762500</span></span>
-<span><span class="co">#&gt; 8  2023-12-08 00:00                    1440 Celcius -12.035714</span></span>
-<span><span class="co">#&gt; 9  2023-12-09 00:00                    1440 Celcius  -9.708036</span></span>
-<span><span class="co">#&gt; 10 2023-12-10 00:00                    1440 Celcius  -6.480357</span></span></code></pre></div>
+<p>Here the coordinates we supplied are returned, as well as the corresponding cellindex, average altitude in the grid cell, date, time, time resolution, units of measurement and the values of <code>tm</code>, the parameter of interest, in these grid cells.</p>
+</div>
+<div class="section level2">
+<h2 id="more-information-about-data">More information about data<a class="anchor" aria-label="anchor" href="#more-information-about-data"></a>
+</h2>
+<p>Questions about the data should be directed to <a href="https://www.nve.no/om-nve/kontakt/" class="external-link">NVE</a>. The R-package maintainer is only responsible for developing the <code>rgts</code>-package which provide access to the data.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
