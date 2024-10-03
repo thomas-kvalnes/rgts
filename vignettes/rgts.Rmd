@@ -120,7 +120,8 @@ Then the daily temperature data can be downloaded using the `gts_dl_cellindex`-f
 
 ```{r download cellindex}
 ## Download data
-head(gts_dl_cellindex(cellindex = cells, parameter = "tm", start_date = "2023-12-01", end_date = "2023-12-01"), 10)
+tm_data <- gts_dl_cellindex(cellindex = cells, parameter = "tm", start_date = "2023-12-01", end_date = "2023-12-01")
+head(tm_data, 10)
 ```
 
 We can also obtain data aggregated across grid cells. We then need to choose a method for aggregating data, "sum", "min", "max", "avg" or "median". Choosing "avg" we can obtain daily averages by
@@ -133,7 +134,29 @@ gts_dl_cellindex_aggr(cellindex = cells, parameter = "tm", start_date = "2023-12
 It is also possible to use `gts_dl_polygon_aggr`-function to downloading aggregated data using polygons directly, but remember to convert the polygon to json first. As mentioned, the polygon functions are a bit slower, so use the cellindex-functions when speed is important.
 
 ## Maps
-Work in progress...
+Using the non-aggregated `gts_dl_...`-functions, downloaded GTS data are returned as data frames where we get the `cellindex` for each parameter value. With the `stars` raster from the `gts_create_grid`-function it is straight forward to create maps to visualize the data. Here the values downloaded above using cellindices, whic are stored in `tm_data` is mapped. The R package `ggplot2` is used in the example, but any package for plotting in R can be used.
+
+```{r map, fig.width=7, fig.height=4}
+## Load the ggplot2 package
+library(ggplot2)
+## New empty attribute for the data
+grid$tm <- NA
+## Insert the downloaded values in the grid which were made earlier.
+## Remember that cellindex = (cell number - 1).
+grid$tm[tm_data$cellindex+1] <- tm_data$tm
+## Crop the grid to the area where we have data
+## Using the polygon from earlier (with a buffer of 1 km)
+grid <- st_crop(x = grid, y = st_buffer(pol,dist = 1000))
+## Make the plot
+ggplot() +
+  geom_stars(data = grid, mapping = aes(fill = tm)) +
+  scale_fill_viridis_c(option = "H", na.value="transparent") +
+  coord_sf(crs = 25833, expand = FALSE) +
+  xlab("") +
+  ylab("") +
+  theme_bw()
+
+```
 
 ## Troubleshooting
 Sometimes what seems to be a valid query may fail and we need to do some troubleshooting. The download functions, with prefix `gts_dl_...`, have two optional arguments to aid this process. First, you may set `verbose` to `TRUE` to see exactly what is sent to the server. Then you can check that you have provided the input data correctly. Second, you can set `return_raw` to `TRUE` to have the function return the raw result as a `list` from the query. Then check that the output is as expected from the type of data and time span and resolution in the query.
