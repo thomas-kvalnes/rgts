@@ -15,7 +15,7 @@ gts_dl_polygon_aggr(
 )
 }
 \arguments{
-\item{polygon}{A polygon as json rings with spatialReference. Use \code{\link[=sf_to_json]{sf_to_json()}} to convert from sf til json. Should be in coordinate system EPSG:25833.}
+\item{polygon}{A polygon as json rings with spatialReference. Use \code{\link[=gts_sf2json]{gts_sf2json()}} to convert from sf til json. Should be in coordinate system EPSG:25833.}
 
 \item{parameter}{The quoted abbreviation for the parameter to download. E.g. Daily precipitaion = "rr", Temperature =  "tm", Snow depth =  "sd".}
 
