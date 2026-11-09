@@ -44,115 +44,45 @@ gts_dl_cellindex_aggr <- function(cellindex, parameter, start_date, end_date, me
   # Prepare cellindices
   cellindex <- paste(cellindex, collapse = ",")
 
-  # Check if time resolution is daily
-  if(timeres == 1440){
+  # Make request
+  req <- request(url_api) |>
+    req_body_json(list(Theme = parameter, StartDate = start_date, EndDate = end_date, Format = "json", Method = method, CellIndexCsv = cellindex))
 
-    # Make request
-    req <- request(url_api) |>
-      req_body_json(list(Theme = parameter, StartDate = start_date, EndDate = end_date, Format = "json", Method = method, CellIndexCsv = cellindex))
+  # Dry run
+  if(verbose)
+    req |> req_dry_run()
 
-    # Dry run
-    if(verbose)
-      req |> req_dry_run()
+  # Run request
+  resp <- req |> req_perform()
 
-    # Run request
-    resp <- req |> req_perform()
+  # Collect results
+  res <- resp |> resp_body_json()
 
-    # Collect results
-    res <- resp |> resp_body_json()
-
-    # Return raw data values
-    if(return_raw){
-      return(res)
-    }
-
-    # NoDataValue
-    nodata <- res$NoDataValue
-
-    # Date and time
-    datetime <- seq(dmy_hm(res$StartDate), dmy_hm(res$EndDate), by = datetime_steps)
-
-    # Time
-    time <- format(as.POSIXlt(as_hms(datetime)), "%H:%M")
-
-    # Make results into data frame
-    resdf <- data.frame(date = date(datetime), variable = res$Theme, unit = res$Unit, time = time, time_resolution_minutes = res$TimeResolution, values = unlist(res$Data), method = res$Method)
-
-    # Replace NoDataValue by NA
-    resdf$values[resdf$values == nodata] <- NA
-
-    # Cast
-    resdf <- dcast(resdf , formula = date + time + time_resolution_minutes + unit ~ variable + method, value.var = "values")
-
-    # Return
-    return(resdf)
-
-  }else{
-    # If not daily, one request per time step (1h or 3h)
-
-    # Make request - first time step
-    req <- request(url_api) |>
-      req_body_json(list(Theme = parameter, StartDate = start_date, EndDate = start_date, Format = "json", Method = method, CellIndexCsv = cellindex))
-
-    # Dry run - first time step
-    if(verbose)
-      req |> req_dry_run()
-
-    # Run request and collect results - first time step
-    res <- req |> req_perform() |> resp_body_json()
-
-    # NoDataValue
-    nodata <- res$NoDataValue
-
-    # Date and time - sequence from first and last time step
-    datetime <- seq(dmy_hm(res$StartDate), ymd_h(end_date), by = datetime_steps)
-
-    # Time
-    time <- format(as.POSIXlt(as_hms(datetime)), "%H:%M")
-
-    # Make results data frame
-    resdf <- data.frame(date = date(datetime), variable = res$Theme, unit = res$Unit, time = time, time_resolution_minutes = res$TimeResolution, values = NA, method = res$Method)
-
-    # Insert first value
-    resdf$values[1] <- unlist(res$Data)
-
-    # Loop through other time steps (if more time steps to run)
-    if(nrow(resdf) > 1){
-      for (i in 2:nrow(resdf)){
-
-        # Hour
-        hh <- str_split_fixed(string = resdf$time[i], pattern = ":", n = 2)[,1]
-
-        # Make start and end date
-        start_i <- paste0(resdf$date[i], "T", hh)
-        end_i <- start_i
-
-        # Make request
-        req <- request(url_api) |>
-          req_body_json(list(Theme = parameter, StartDate = start_i, EndDate = end_i, Format = "json", Method = method, CellIndexCsv = cellindex))
-
-        # Dry run
-        if(verbose)
-          req |> req_dry_run()
-
-        # Run request and collect results
-        res <- req |> req_perform() |> resp_body_json()
-
-        # Insert into data frame
-        resdf$values[i] <- unlist(res$Data)
-
-      }
-    }
-
-    # Replace NoDataValue by NA
-    resdf$values[resdf$values == nodata] <- NA
-
-    # Cast
-    resdf <- dcast(resdf , formula = date + time + time_resolution_minutes + unit ~ variable + method, value.var = "values")
-
-    # Return
-    return(resdf)
-
+  # Return raw data values
+  if(return_raw){
+    return(res)
   }
+
+  # NoDataValue
+  nodata <- res$NoDataValue
+
+  # Date and time
+  datetime <- seq(dmy_hm(res$StartDate), dmy_hm(res$EndDate), by = datetime_steps)
+
+  # Time
+  time <- format(as.POSIXlt(as_hms(datetime)), "%H:%M")
+
+  # Make results into data frame
+  resdf <- data.frame(date = date(datetime), variable = res$Theme, unit = res$Unit, time = time, time_resolution_minutes = res$TimeResolution, values = unlist(res$Data), method = res$Method)
+
+  # Replace NoDataValue by NA
+  resdf$values[resdf$values == nodata] <- NA
+
+  # Cast
+  resdf <- dcast(resdf , formula = date + time + time_resolution_minutes + unit ~ variable + method, value.var = "values")
+
+  # Return
+  return(resdf)
+
 }
 #'
