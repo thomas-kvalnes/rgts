@@ -23,7 +23,7 @@ gts_dl_coords <- function(coords, parameter, start_date, end_date, return_raw = 
   # URL to download API
   url_api <- "http://gts.nve.no/api/MultiPointTimeSeries/ByMapCoordinateCsv"
 
-  # Prepare coordiantes (remove any decimals and paste)
+  # Prepare coordinates (remove any decimals and paste)
   coords$x <- round(coords$x)
   coords$y <- round(coords$y)
   coords <- paste(apply(X = coords, MARGIN = 1, FUN = function(x)paste(x, collapse = " ")), collapse = ", ")
