@@ -4,6 +4,8 @@
 # rgts <img src="man/figures/logo.png" align="right" height="139" alt="" />
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/thomas-kvalnes/rgts/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/thomas-kvalnes/rgts/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 ## Overview
@@ -39,12 +41,12 @@ using the `gts_parameters`-function. Here we show the first five:
 
 ``` r
 head(gts_parameters(), 5)
-#>   Name            Fullname NoDataValue RawUnit HumanReadableUnit
+#>   Name              Fullname NoDataValue RawUnit HumanReadableUnit
 #> 1   rr          Døgnnedbør       65535      mm                mm
 #> 2 rr3d Nedbør siste 3 døgn       65535      mm                mm
-#> 3 rr1h       Nedbør 1 time       65535      mm                mm
-#> 4 rr3h      Nedbør 3 timer       65535      mm                mm
-#> 5  rrl                Regn       65535      mm                mm
+#> 3 rr1h        Nedbør 1 time       65535      mm                mm
+#> 4 rr3h       Nedbør 3 timer       65535      mm                mm
+#> 5  rrl                  Regn       65535      mm                mm
 #>   TimeResolutionInMinutes FirstDateInTimeSerie
 #> 1                    1440           1957-01-01
 #> 2                    1440           2010-01-01

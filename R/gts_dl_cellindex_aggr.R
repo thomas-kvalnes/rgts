@@ -14,7 +14,7 @@
 #' @seealso [gts_cellindex()] to find the cellindices for points or all raster cells in a polygon, and [gts_dl_cellindex()] to download cellwise GTS data.
 #' @examples
 #'# Example
-#' ## Create a sf polygon and convert to json
+#' ## Create a sf polygon
 #' library(sf)
 #' xx <- c(58200, 74225, 58200, 74226)
 #' yy <- c(6708225, 6708225, 6715025, 6715025)
