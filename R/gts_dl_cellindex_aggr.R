@@ -2,7 +2,6 @@
 #' @md
 #' @description Downloads and returns data aggregated for the chosen time resolution over grid cells identified by their CellIndex. For the same area, this is faster than [gts_dl_polygon_aggr()], as the latter first looks up the cellindices for the polygon. Available methods for aggregating are sum, min, max, avg and median. Time resolution is given by the choice of parameter and start_date/end_date. E.g. "tm3h" for "2023-12-01T06" is three hour data for temperature collected at 06:00 and "tm" for "2023-12-01" is the daily average temperature.\cr \cr
 #' \emph{Note: The API has a cap at ~635'000 values in each download (lower if many missing values) and ends with an error for larger queries.}\cr \cr
-#' \emph{Warning: This function is very slow for 1 and 3 hour time steps as the API requires one request per time step when not requesting daily time steps.}
 #' @param cellindex A vector with cellindices for which GTS data should be downloaded.
 #' @param parameter The quoted abbreviation for the parameter to download. E.g. Daily precipitaion = "rr", Temperature =  "tm", Snow depth =  "sd".
 #' @param start_date The start date given as: 'YYYY-MM-DD'. If querying three or one hour data, the hour should be given like this: format: 'YYYY-MM-DDT06'
