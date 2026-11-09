@@ -11,7 +11,7 @@
 #' @return A data frame with the GTS data associated with each grid cell for each step in the time resolution, e.g. daily values or values for each hour.
 #' @seealso [gts_cellindex()] to find the cellindices for points or all raster cells in a polygon.
 #' @examples
-#' ## Create a sf polygon and convert to json
+#' ## Create a sf polygon
 #' library(sf)
 #' xx <- c(58200, 74225, 58200, 74226)
 #' yy <- c(6708225, 6708225, 6715025, 6715025)
