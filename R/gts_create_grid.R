@@ -10,7 +10,7 @@
 #' @export
 gts_create_grid <- function(){
 
-  # Create grid with extend and resulution used in the GridTimeSeries data
+  # Create grid with extend and resolution used in the GridTimeSeries data
   grid <- st_as_stars(st_bbox(c(xmin = -75000, ymin = 6450000, xmax = 1120000, ymax = 8000000), crs = st_crs(25833)), dx = 1000, dy = 1000, values = NA)
 
   # Add cellindex

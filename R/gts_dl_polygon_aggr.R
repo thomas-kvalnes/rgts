@@ -3,7 +3,7 @@
 #' @description Downloads and returns data aggregated for the chosen time resolution over grid cells within a polygon (coordinate system: (EPSG: 25833)). Available methods for aggregating are sum, min, max, avg and median. Time resolution is given by the choice of parameter and start_date/end_date. E.g. "tm3h" for "2023-12-01T06" is three hour data for temperature collected at 06:00 and "tm" for "2023-12-01" is the daily average temperature. collected at 06:00.\cr \cr
 #' \emph{Note: The API has a cap at ~635'000 values in each download (lower if many missing values) and ends with an error for larger queries.}\cr \cr
 #' \emph{Warning: This function is extremely slow for 1 and 3 hour time steps as the API requires one request per time step when not requesting daily time steps.}
-#' @param polygon A polygon as json rings with spatialReference. Use [sf_to_json()] to convert from sf til json. Should be in coordinate system EPSG:25833.
+#' @param polygon A polygon as json rings with spatialReference. Use [gts_sf2json()] to convert from sf til json. Should be in coordinate system EPSG:25833.
 #' @param parameter The quoted abbreviation for the parameter to download. E.g. Daily precipitaion = "rr", Temperature =  "tm", Snow depth =  "sd".
 #' @param start_date The start date given as: 'YYYY-MM-DD'. If querying three or one hour data, the hour should be given like this: format: 'YYYY-MM-DDT06'
 #' @param end_date The end date. See start_date.

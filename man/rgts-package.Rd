@@ -22,5 +22,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Thomas Kvalnes \email{thomas.kvalnes@nina.no}
 
+Authors:
+\itemize{
+  \item Thomas Kvalnes \email{thomas.kvalnes@nina.no}
+}
+
 }
 \keyword{internal}

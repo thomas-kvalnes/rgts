@@ -39,7 +39,7 @@ Downloads and returns data aggregated for the chosen time resolution over grid c
 }
 \examples{
 # Example
-## Create a sf polygon and convert to json
+## Create a sf polygon
 library(sf)
 xx <- c(58200, 74225, 58200, 74226)
 yy <- c(6708225, 6708225, 6715025, 6715025)

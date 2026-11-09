@@ -8,7 +8,6 @@ Description: A set of functions for accessing and downloading the GridTimeSeries
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.2
 Suggests: 
     ggplot2,
     knitr,
@@ -31,3 +30,4 @@ Imports:
 URL: https://github.com/thomas-kvalnes/rgts, https://thomas-kvalnes.github.io/rgts/
 BugReports: https://github.com/thomas-kvalnes/rgts/issues
 VignetteBuilder: knitr
+Config/roxygen2/version: 8.1.1
